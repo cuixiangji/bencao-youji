@@ -1,0 +1,508 @@
+/* page13.css —— PAGE13 分享与保存（MY HERBAL JOURNEY · 本草探索成果卡 / 项目最终页）
+ *
+ * 定位：P12 我的本草探索档案（保存 archiveData + go(13)）→ P13 分享与保存（成果卡结算）
+ * 视觉：暗底 #0C0B09 上的一张暖米白成果卡 #F2EEE5（纸面质感 + 细内描边 + 柔和投影），
+ *       卡内墨色系 #3A332B / #5B4638 / #8A7F6F / #A29886（与 P12 专属茶饮卡同一色系）。
+ * 复用：base.css 变量、layout.css 的 .page 范式、components.css 的 .btn / .btn-ghost / .tag / .en、
+ *       page09.css 的 .bp-radar 内部结构（卡内按米白纸面重设网格墨色，不改 page09.css）。
+ *       本草主题色经 --jc-tea / --jc-herb 注入，取值全部来自既有 PALETTE，未新增颜色。
+ *
+ * 明确不出现：医疗器械界面 / 药房视觉 / 卷轴 / 木纹 / 祥云 / 中式边框 / 中国红 / 大面积金色 / 3D。
+ * 明确不使用：CSS Grid gap（规范禁用，统一 flex + gap 的 flex 布局）。
+ * 布局说明：操作区为常规文档流（非固定底栏），成果卡与按钮同页滚动，从结构上规避固定底栏遮挡问题。
+ */
+
+.jc-cardbox {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── 成果卡（暖米白纸面） ── */
+.jc-card {
+  position: relative;
+  width: 86%;
+  max-width: 26rem;
+  margin: .5rem auto 0;
+  padding: 1.5rem 1.25rem 1.625rem;
+  border-radius: 1.375rem;
+  background:
+    radial-gradient(circle at 82% 10%, rgba(91, 70, 56, .05) 0%, rgba(91, 70, 56, 0) 42%),
+    radial-gradient(circle at 12% 90%, rgba(91, 70, 56, .04) 0%, rgba(91, 70, 56, 0) 40%),
+    #F2EEE5;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .4);
+  overflow: hidden;
+}
+/* 细内描边（纸面的印刷框线） */
+.jc-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1.375rem;
+  box-shadow: inset 0 0 0 1px rgba(91, 70, 56, .12);
+  pointer-events: none;
+}
+
+.jc {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ── 卡头：MY HERBAL JOURNEY / 我的本草探索成果 / 编号 + 时间 ── */
+.jc-head {
+  text-align: center;
+  padding-bottom: .875rem;
+  border-bottom: 1px solid rgba(91, 70, 56, .14);
+}
+.jc-eyebrow {
+  font-size: .6875rem;
+  letter-spacing: .26em;
+  color: #A29886;
+}
+.jc-title {
+  margin: .5rem 0 0;
+  font-size: 1.625rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  line-height: 1.3;
+  color: #3A332B;
+}
+.jc-no {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: .75rem;
+  margin-top: .625rem;
+}
+.jc-no-id {
+  font-size: .875rem;
+  letter-spacing: .2em;
+  color: #5B4638;
+}
+.jc-no-date {
+  font-size: .6875rem;
+  letter-spacing: .1em;
+  color: #A29886;
+}
+
+/* ── 我的探索型 ── */
+.jc-type {
+  margin-top: 1.125rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgba(91, 70, 56, .14);
+  border-radius: .75rem;
+  background: rgba(91, 70, 56, .05);
+}
+.jc-sec-k {
+  font-size: .625rem;
+  letter-spacing: .22em;
+  color: #A29886;
+  text-align: center;
+}
+.jc-type-name {
+  margin-top: .5rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  line-height: 1.35;
+  color: #3A332B;
+  text-align: center;
+}
+.jc-type-kws {
+  margin-top: .75rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .375rem;
+}
+.jc-card .tag {
+  border-color: rgba(91, 70, 56, .26);
+  color: #5B4638;
+  background: rgba(91, 70, 56, .04);
+}
+
+/* ── 六维探索图（复用 page09.css 的 .bp-radar 结构；卡内按米白纸面重设墨色） ── */
+.jc-radar-wrap {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.jc-radar-box {
+  width: clamp(180px, 54vw, 210px);
+  height: clamp(180px, 54vw, 210px);
+  margin: 0 auto;
+}
+.jc-radar-cap {
+  margin-top: .375rem;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: #A29886;
+  opacity: .85;
+}
+.jc-card .bp-ring { stroke: #5B4638; stroke-opacity: .14; }
+.jc-card .bp-axis { stroke: #5B4638; stroke-opacity: .16; }
+.jc-card .bp-orbit { stroke: #5B4638; stroke-opacity: .2; }
+.jc-card .bp-node { fill: #5B4638; fill-opacity: .3; }
+.jc-card .bp-axis-label { fill: #8A7F6F; }
+
+/* ── 区块头（我的三味本草 / 我的专属茶饮） ── */
+.jc-sec {
+  margin-top: 1.375rem;
+}
+.jc-sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid rgba(91, 70, 56, .12);
+}
+.jc-sec-t {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: #3A332B;
+}
+.jc-sec-en {
+  flex: 0 0 auto;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: #A29886;
+}
+
+/* ── 我的三味本草（标本陈列：横向三列） ── */
+.jc-herb-row {
+  display: flex;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+.jc-herb {
+  --jc-herb: #8A9A7B;
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: .625rem .375rem;
+  border: 1px solid rgba(91, 70, 56, .14);
+  border-radius: .625rem;
+  background: rgba(91, 70, 56, .05);
+  overflow: hidden;
+}
+.jc-herb::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--jc-herb);
+  opacity: .5;
+  pointer-events: none;
+}
+.jc-herb-no {
+  font-size: .625rem;
+  letter-spacing: .16em;
+  color: var(--jc-herb, #5B4638);
+  opacity: .9;
+}
+.jc-herb-fig {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  margin: .375rem 0 .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.jc-herb-halo { position: absolute; inset: 0; pointer-events: none; }
+.jc-herb-img {
+  position: relative;
+  width: 78%;
+  height: 78%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.jc-herb-img > svg { width: 100%; height: auto; max-height: 100%; }
+.jc-herb-img > img { width: 100%; height: 100%; object-fit: contain; }
+.jc-herb-name {
+  font-size: .875rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  line-height: 1.3;
+  color: #3A332B;
+  word-break: break-word;
+}
+.jc-herb-latin {
+  margin-top: .125rem;
+  font-size: .625rem;
+  font-style: italic;
+  letter-spacing: .04em;
+  color: #8A7F6F;
+  word-break: break-word;
+}
+.jc-herb-field {
+  margin-top: .375rem;
+  font-size: .625rem;
+  line-height: 1.5;
+  color: #8A7F6F;
+  word-break: break-word;
+}
+
+/* ── 我的专属茶饮（小茶盏 + 两味色点 + 茶名 + 组成） ── */
+.jc-tea {
+  --jc-tea: #8A9A7B;
+  margin-top: .75rem;
+  padding: 1.125rem 1rem 1.25rem;
+  border: 1px solid rgba(91, 70, 56, .14);
+  border-radius: .875rem;
+  background: rgba(91, 70, 56, .05);
+}
+.jc-tea-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: .75rem;
+}
+.jc-tea-vessel {
+  width: 4rem;
+  height: 4rem;
+  flex: 0 0 auto;
+}
+.jc-vessel-svg { width: 100%; height: 100%; }
+.jc-tea-dots {
+  display: flex;
+  flex-direction: column;
+  gap: .4375rem;
+}
+.jc-tea-dot {
+  width: .8125rem;
+  height: .8125rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(91, 70, 56, .18);
+}
+.jc-tea-name {
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  line-height: 1.3;
+  text-align: center;
+  color: #3A332B;
+  word-break: break-word;
+}
+.jc-tea-mats {
+  margin-top: .375rem;
+  font-size: .8125rem;
+  letter-spacing: .08em;
+  color: #8A7F6F;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* ── 结语 + 本草有迹落款 + 统一免责小字 ── */
+.jc-close {
+  margin-top: 1.375rem;
+  text-align: center;
+}
+.jc-close-p {
+  margin: 0;
+  font-size: .8125rem;
+  line-height: 1.8;
+  letter-spacing: .02em;
+  color: #5B4638;
+}
+.jc-sign {
+  margin-top: .75rem;
+  font-size: .75rem;
+  letter-spacing: .3em;
+  color: #A29886;
+}
+.jc-note {
+  margin: 1rem 0 0;
+  font-size: .625rem;
+  line-height: 1.6;
+  color: #8A7F6F;
+  opacity: .8;
+  text-align: center;
+}
+
+/* ── 外部操作区（常规文档流；按钮热区由 .btn / .btn-ghost 保证 ≥44px） ── */
+.jc-ops {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .625rem;
+}
+.jc-gen { min-width: 12rem; }
+.jc-save, .jc-restart { min-width: 9rem; letter-spacing: .06em; }
+
+/* ── 分享图浮层（固定层，挂 .page 直下；与 .bp-sheet 同一开关范式） ── */
+.jc-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .8);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .26s ease, visibility .26s ease;
+}
+.jc-mask.is-open { opacity: 1; visibility: visible; }
+.jc-share {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-5) var(--sp-5) calc(var(--sp-5) + var(--sab));
+  text-align: center;
+}
+.jc-share-t {
+  font-size: .875rem;
+  letter-spacing: .08em;
+  color: var(--c-text-1);
+}
+.jc-share-imgw {
+  margin-top: .875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+}
+.jc-share-img {
+  display: block;
+  max-width: 74vw;
+  max-height: 56vh;
+  width: auto;
+  height: auto;
+  border-radius: .5rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+}
+.jc-share-hint {
+  margin-top: .875rem;
+  font-size: .75rem;
+  letter-spacing: .06em;
+  color: var(--c-text-2);
+}
+.jc-share-hint2 {
+  margin-top: .375rem;
+  font-size: .625rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+}
+.jc-share-x {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  width: var(--tap-min);
+  height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--c-text-2);
+  -webkit-tap-highlight-color: transparent;
+}
+.jc-share-x:active { -webkit-transform: scale(.92); transform: scale(.92); }
+
+/* ── 降级（archiveData 缺失 / 不完整：不白屏、不自造内容） ── */
+.jc-degraded {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.jc-dg-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2rem;
+}
+.jc-dg-empty {
+  width: 6.5rem;
+  height: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.jc-dg-empty > svg { width: 100%; height: auto; }
+.jc-dg-msg {
+  margin: 1.25rem 0 0;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  text-align: center;
+}
+.jc-dg-sub {
+  margin: .375rem 0 0;
+  font-size: .75rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+  text-align: center;
+}
+.jc-dg-foot {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: calc(1rem + var(--sab));
+}
+.jc-dg-back { min-width: 10rem; }
+
+/* ── 入场态：区块依次淡入（只动 opacity / transform） ── */
+.jc-block {
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  transition: opacity .5s ease, -webkit-transform .5s ease, transform .5s ease;
+}
+.jc-block.is-in {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+/* ── 降级：低端机 / 减少动效 / SKIP_ANIMATION（一律终态，无过渡） ── */
+html[data-lowperf="1"] .jc-block,
+html[data-reduced="1"] .jc-block,
+html.bc-skip-anim .jc-block {
+  opacity: 1 !important;
+  -webkit-transform: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+html[data-lowperf="1"] .jc-mask,
+html[data-reduced="1"] .jc-mask,
+html.bc-skip-anim .jc-mask { transition: none; }
+
+/* ── 窄屏微调（320 / 极小屏） ── */
+@media screen and (max-width: 340px) {
+  .jc-card { width: 90%; padding: 1.25rem 1rem 1.375rem; }
+  .jc-title { font-size: 1.375rem; }
+  .jc-type-name { font-size: 1.25rem; }
+  .jc-radar-box { width: clamp(176px, 52vw, 190px); height: clamp(176px, 52vw, 190px); }
+  .jc-herb-row { gap: .375rem; }
+  .jc-herb-fig { width: 2.75rem; height: 2.75rem; }
+  .jc-tea-vessel { width: 3.5rem; height: 3.5rem; }
+  .jc-gen { min-width: 10.5rem; }
+}
+
+/* ── 宽屏：略大字号（430 上限由 .h5-root 控制） ── */
+@media screen and (min-width: 400px) {
+  .jc-title { font-size: 1.75rem; }
+  .jc-type-name { font-size: 1.4375rem; }
+  .jc-tea-name { font-size: 1.5rem; }
+}

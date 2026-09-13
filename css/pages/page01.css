@@ -1,0 +1,185 @@
+/* page01.css —— PAGE01 开场：品牌沉浸入口（种子 → 发芽 → 生长）
+   视觉：digital botanical museum / 低饱和 / 细线 / 克制渐变 */
+
+.p01 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── 动画舞台（可点击跳过） ── */
+.p01-stage {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38vh;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 柔和光晕（唯一允许的渐变，极低饱和） */
+.p01-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 78%;
+  max-width: 20rem;
+  padding-top: 78%;
+  max-height: 20rem;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(233, 228, 216, .10) 0%, rgba(233, 228, 216, .03) 45%, rgba(12, 11, 9, 0) 70%);
+  pointer-events: none;
+}
+
+/* 外圈细线环（博物馆展台感） */
+.p01-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 62%;
+  max-width: 15rem;
+  padding-top: 62%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(242, 238, 229, .10);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.p01-ring::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(242, 238, 229, .06);
+  border-radius: 50%;
+}
+
+/* ── 植物 SVG ── */
+.p01-plant {
+  position: relative;
+  width: 60%;
+  max-width: 15rem;
+  height: auto;
+  overflow: visible;
+}
+.p01-plant .p01-soil {
+  stroke: rgba(242, 238, 229, .18);
+  stroke-width: 1;
+}
+.p01-plant .p01-stem {
+  fill: none;
+  stroke: #E9E4D8;
+  stroke-opacity: .82;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 70;
+  stroke-dashoffset: 70;
+  transition: stroke-dashoffset 1.05s cubic-bezier(.22, .68, .36, 1);
+}
+.p01-plant .p01-leaf {
+  fill: #E9E4D8;
+  stroke: none;
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  transition: opacity .7s ease, -webkit-transform .7s ease, transform .7s ease;
+}
+.p01-plant .g-l .p01-leaf { fill-opacity: .42; }
+.p01-plant .g-r .p01-leaf { fill-opacity: .28; }
+.p01-plant .p01-bud {
+  fill: none;
+  stroke: #E9E4D8;
+  stroke-opacity: .7;
+  stroke-width: 1.2;
+  opacity: 0;
+  -webkit-transform: translateY(6px);
+  transform: translateY(6px);
+  transition: opacity .6s ease .15s, -webkit-transform .6s ease .15s, transform .6s ease .15s;
+}
+.p01-plant .p01-seed {
+  fill: none;
+  stroke: #E9E4D8;
+  stroke-opacity: .55;
+  stroke-width: 1.2;
+  transition: opacity .5s ease;
+}
+
+/* 阶段：seed（默认） / sprout / grown —— 只切属性，不依赖 animationend */
+.p01-plant[data-stage="seed"] .p01-stem { stroke-dashoffset: 70; }
+.p01-plant[data-stage="sprout"] .p01-stem { stroke-dashoffset: 34; }
+.p01-plant[data-stage="grown"] .p01-stem { stroke-dashoffset: 0; }
+
+.p01-plant[data-stage="sprout"] .g-l .p01-leaf,
+.p01-plant[data-stage="grown"] .g-l .p01-leaf,
+.p01-plant[data-stage="grown"] .g-r .p01-leaf {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+.p01-plant[data-stage="grown"] .p01-bud {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+.p01-plant[data-stage="sprout"] .p01-seed,
+.p01-plant[data-stage="grown"] .p01-seed { opacity: 0; }
+
+/* ── 品牌区 ── */
+.p01-brand {
+  text-align: center;
+  padding-top: var(--sp-5);
+}
+.p01-logo {
+  font-size: .875rem;
+  letter-spacing: .42em;
+  text-indent: .42em;
+  color: var(--c-text-2);
+}
+.p01-logo-mark {
+  display: block;
+  width: 2.25rem;
+  height: 1px;
+  margin: 0 auto var(--sp-3);
+  background: rgba(242, 238, 229, .28);
+}
+.p01-title {
+  margin-top: var(--sp-3);
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-indent: .12em;
+  color: var(--c-text-1);
+  line-height: 1.35;
+}
+.p01-sub {
+  margin-top: var(--sp-2);
+  font-size: .6875rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+
+/* ── 底部 ── */
+.p01-hint {
+  margin-top: var(--sp-4);
+  font-size: .75rem;
+  letter-spacing: .1em;
+  color: var(--c-text-3);
+  min-height: 1.25rem;
+  transition: opacity .3s ease;
+}
+.p01-hint[data-done="1"] { opacity: 0; }
+
+/* 降级：低性能 / 减少动效 → 直接给最终态，不做过渡 */
+html[data-lowperf="1"] .p01-plant .p01-stem,
+html[data-reduced="1"] .p01-plant .p01-stem { transition: none; }
+html[data-lowperf="1"] .p01-plant .p01-leaf,
+html[data-lowperf="1"] .p01-plant .p01-bud,
+html[data-reduced="1"] .p01-plant .p01-leaf,
+html[data-reduced="1"] .p01-plant .p01-bud { transition: none; }
+html[data-lowperf="1"] .p01-ring,
+html[data-lowperf="1"] .p01-stage::before { display: none; }

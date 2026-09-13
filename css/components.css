@@ -1,0 +1,124 @@
+/* components.css —— 按钮 / 返回 / toast / 蒙层 / 进度 / 标签 */
+
+/* ── 通用按钮：最小点击区 44×44，禁用 hover 依赖 ── */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 8rem;
+  min-height: var(--tap-min);
+  padding: .625rem 1.5rem;
+  border-radius: 999px;
+  font-size: .9375rem;
+  color: var(--c-bg);
+  background: var(--c-text-1);
+  transition: -webkit-transform .15s ease, transform .15s ease, opacity .15s ease;
+}
+.btn:active { -webkit-transform: scale(.96); transform: scale(.96); }
+
+.btn-ghost {
+  min-height: var(--tap-min);
+  padding: .5rem 1.25rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  color: var(--c-text-2);
+  background: transparent;
+}
+.btn-ghost:active { -webkit-transform: scale(.96); transform: scale(.96); }
+
+.btn-text {
+  min-height: var(--tap-min);
+  padding: .5rem .75rem;
+  color: var(--c-text-3);
+  font-size: .875rem;
+  background: none;
+}
+
+/* ── 统一返回按钮（左上，44×44） ── */
+.bc-back {
+  width: var(--tap-min);
+  height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(21, 18, 15, .55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.bc-back:active { -webkit-transform: scale(.92); transform: scale(.92); }
+.bc-back svg { width: 20px; height: 20px; }
+
+/* ── toast ── */
+.bc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(4rem + var(--sab));
+  -webkit-transform: translateX(-50%) translateY(8px);
+  transform: translateX(-50%) translateY(8px);
+  max-width: 17.5rem;
+  padding: .625rem 1rem;
+  border-radius: .5rem;
+  background: rgba(21, 18, 15, .94);
+  border: 1px solid var(--c-line);
+  color: var(--c-text-2);
+  font-size: .8125rem;
+  line-height: 1.5;
+  text-align: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, -webkit-transform .25s ease, transform .25s ease;
+}
+.bc-toast.is-show { opacity: 1; -webkit-transform: translateX(-50%) translateY(0); transform: translateX(-50%) translateY(0); }
+
+/* ── 蒙层（分享引导等） ── */
+.bc-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .78);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: calc(1rem + var(--sat)) 1.5rem 0;
+  z-index: 300;
+  color: var(--c-text-2);
+  font-size: .875rem;
+}
+.bc-mask[hidden] { display: none; }
+
+/* ── 进度条 ── */
+.bc-progress {
+  width: 100%;
+  height: 2px;
+  background: var(--c-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bc-progress > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--c-text-2);
+  transition: width .3s ease;
+}
+
+/* ── 标签 ── */
+.tag {
+  display: inline-block;
+  padding: .1875rem .625rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  font-size: .75rem;
+  color: var(--c-text-2);
+}
+
+/* ── 免责小字 ── */
+.disclaimer {
+  margin-top: var(--sp-4);
+  font-size: .6875rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  text-align: center;
+}

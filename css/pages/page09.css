@@ -1,0 +1,555 @@
+/* page09.css —— PAGE09 本草身体画像（BODY PROFILE · 身体观察画像 / 数字植物标本馆）
+ *
+ * 定位：P08 我的身体观察（收束记录）→ P09 本草身体画像（观察结果呈现）
+ * 复用：base.css 变量、layout.css 的 .page / .page-foot 范式、components.css 的 .btn / .btn-ghost / .btn-text / .tag。
+ *       本草主题色仅经 --bp-accent（页面）/ --bp-herb（单卡）注入，取值全部来自既有 PALETTE（BC.render.herbColor），未新增颜色。
+ *
+ * 明确不出现：医疗器械界面 / 医院报告单 / 科技驾驶舱 / 复杂 BI 图表 /
+ *             中国红 / 大面积金色 / 传统中医诊断界面 / 药房视觉 / 3D / 拟物。
+ * 明确不使用：卷轴 / 木纹 / 中式边框 / 祥云 / CSS Grid gap（规范禁用，统一 flex + gap 的 flex 布局）。
+ */
+
+.bp {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  /* 底部为固定主按钮底栏「进入本草实验室」，预留让位避免遮挡免责声明 */
+  padding-bottom: calc(6rem + var(--sab));
+}
+
+/* ── ① 顶部：眉标 + 主标题 + 副标题 + 极淡装饰层 ── */
+.bp-head {
+  position: relative;
+  flex: 0 0 auto;
+  padding: .25rem 0 .875rem;
+}
+.bp-trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.bp-ring-dec {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .08;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.bp-ring-dec-2 { stroke-opacity: .05; }
+.bp-arc-dec {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .10;
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.bp-tick-dec {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .14;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.bp-dot-dec { fill: var(--c-text-1); fill-opacity: .22; }
+
+.bp-eyebrow {
+  position: relative;
+  font-size: .6875rem;
+  letter-spacing: .24em;
+  color: var(--c-text-3);
+}
+.bp-title {
+  position: relative;
+  margin: .5rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1.25;
+  color: var(--c-text-1);
+}
+.bp-sub {
+  position: relative;
+  margin: .375rem 0 0;
+  font-size: .8125rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+}
+
+/* ── ② 探索类型 + 关键词 ── */
+.bp-type {
+  flex: 0 0 auto;
+  margin-top: 1.25rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--c-line);
+  border-radius: .75rem;
+  background: rgba(21, 18, 15, .5);
+}
+.bp-type-k {
+  font-size: .625rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+.bp-type-name {
+  margin-top: .5rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  line-height: 1.35;
+  color: var(--c-text-1);
+}
+.bp-type-kws {
+  margin-top: .75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+}
+.bp-kw {
+  border-color: var(--bp-accent, var(--c-line));
+  color: var(--bp-accent, var(--c-text-2));
+}
+
+/* ── ③ 六维雷达（气 / 血 / 阴 / 阳 / 湿 / 热） ── */
+.bp-radar-wrap {
+  flex: 0 0 auto;
+  margin-top: 1.375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bp-radar-box {
+  width: clamp(220px, 70vw, 260px);
+  height: clamp(220px, 70vw, 260px);
+  margin: 0 auto;
+}
+.bp-radar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.bp-radar-cap {
+  margin-top: .5rem;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: var(--c-text-3);
+  opacity: .8;
+}
+
+/* 网格 / 坐标线：极细、极淡（数字植物标本馆的「记录纸」） */
+.bp-ring {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .07;
+  stroke-width: 1;
+}
+.bp-axis {
+  stroke: var(--c-text-1);
+  stroke-opacity: .10;
+  stroke-width: 1;
+}
+.bp-orbit {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .12;
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+}
+.bp-node { fill: var(--c-text-1); fill-opacity: .20; }
+
+/* 维度文字（气 / 血 / 阴 / 阳 / 湿 / 热）—— 属性里有兜底色，CSS 变量优先 */
+.bp-axis-label { fill: var(--c-text-2); }
+
+/* 数据区：生长态（只在 opacity / stroke-dashoffset 上做动效） */
+.bp-data-fill {
+  opacity: 0;
+  transition: opacity .7s ease;
+}
+.bp-radar.is-draw .bp-data-fill { opacity: 1; }
+
+/* 数据环描边：初始 dashoffset = 周长（--bp-perim），加 .is-draw 后归零完成「画线」 */
+.bp-data-line { stroke-width: 1.5; }
+.bp-radar .bp-data-line { stroke-dashoffset: var(--bp-perim, 320); }
+.bp-radar.is-draw .bp-data-line { stroke-dashoffset: 0; }
+
+.bp-node-data {
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.bp-radar.is-draw .bp-node-data { opacity: 1; }
+.bp-center { pointer-events: none; }
+
+/* ── ④ 探索描述（短） ── */
+.bp-desc {
+  flex: 0 0 auto;
+  margin-top: 1.375rem;
+  text-align: center;
+}
+.bp-desc-lead {
+  margin: 0;
+  font-size: .8125rem;
+  letter-spacing: .04em;
+  color: var(--c-text-3);
+}
+.bp-desc-line {
+  margin: .5rem 0 0;
+  font-size: .9375rem;
+  line-height: 1.8;
+  letter-spacing: .02em;
+  color: var(--c-text-2);
+}
+
+/* ── ⑤ 与你的探索气质相近 + 3 张推荐本草卡 ── */
+.bp-rec {
+  flex: 0 0 auto;
+  margin-top: 1.75rem;
+}
+.bp-rec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  padding-bottom: .625rem;
+  border-bottom: 1px solid rgba(242, 238, 229, .08);
+}
+.bp-rec-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--c-text-1);
+}
+.bp-rec-sub {
+  flex: 0 0 auto;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: var(--c-text-3);
+}
+
+.bp-cards {
+  display: flex;
+  flex-direction: column;
+  gap: .625rem;
+  margin-top: .875rem;
+}
+/* 整卡可点（原生 button）→ 热区远大于 44×44；不依赖 hover */
+.bp-card {
+  --bp-herb: #8A9A7B;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .875rem;
+  width: 100%;
+  min-height: 4.75rem;
+  padding: .75rem .875rem;
+  border: 1px solid var(--c-line);
+  border-radius: .625rem;
+  background: rgba(21, 18, 15, .55);
+  text-align: left;
+  overflow: hidden;
+  /* 入场前态：依次淡入（只动 opacity / transform） */
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  transition: opacity .45s ease, -webkit-transform .45s ease, transform .45s ease;
+}
+.bp-card:active {
+  -webkit-transform: translateY(0) scale(.985);
+  transform: translateY(0) scale(.985);
+}
+
+/* 左侧本草色细条（本草主题色的第二个落点） */
+.bp-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--bp-herb);
+  opacity: .38;
+  pointer-events: none;
+}
+
+.bp-card-fig {
+  position: relative;
+  flex: 0 0 auto;
+  width: 3.25rem;
+  height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bp-card-halo { position: absolute; inset: 0; pointer-events: none; }
+.bp-card-img {
+  position: relative;
+  width: 74%;
+  height: 74%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bp-card-img > svg { width: 100%; height: auto; max-height: 100%; }
+.bp-card-img > img { width: 100%; height: 100%; object-fit: contain; }
+
+.bp-card-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .25rem;
+}
+.bp-card-name {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--c-text-1);
+  word-break: break-word;
+}
+.bp-card-kw {
+  font-size: .75rem;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.bp-card-no {
+  flex: 0 0 auto;
+  margin-left: .25rem;
+  font-size: .6875rem;
+  letter-spacing: .16em;
+  color: var(--bp-herb, var(--c-text-3));
+  opacity: .75;
+}
+
+/* 依次淡入的终态（.is-in 由 JS 按 CARD_DELAY + i*CARD_STEP 逐张加上） */
+.bp-card.is-in {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+/* ── ⑥ 次要动作：调整我的观察 ── */
+.bp-actions {
+  flex: 0 0 auto;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+.bp-adjust { color: var(--c-text-2); }
+
+/* ── ⑦ 统一免责小字 ── */
+.bp-note {
+  flex: 0 0 auto;
+  margin: 1.25rem 0 0;
+  font-size: .6875rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  opacity: .72;
+  text-align: center;
+}
+
+/* ── ⑧ 本草信息浮层（复用 P03 的信息结构；不出现「重新选择」） ── */
+.bp-sheet {
+  --bp-sheet-accent: #8A9A7B;
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, .72);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .26s ease, visibility .26s ease;
+}
+.bp-sheet.is-open { opacity: 1; visibility: visible; }
+.bp-sheet-inner {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: 86vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--sp-5) var(--sp-5) calc(var(--sp-5) + var(--sab));
+  background: var(--c-bg-2);
+  border-top: 1px solid var(--c-line);
+  border-radius: 1rem 1rem 0 0;
+  -webkit-transform: translateY(16px);
+  transform: translateY(16px);
+  transition: -webkit-transform .26s ease, transform .26s ease;
+}
+.bp-sheet.is-open .bp-sheet-inner {
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+.bp-sheet-x {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  width: var(--tap-min);
+  height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--c-text-2);
+  -webkit-tap-highlight-color: transparent;
+}
+.bp-sheet-x:active { -webkit-transform: scale(.92); transform: scale(.92); }
+
+.bp-sheet-top {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding-right: var(--sp-6);
+}
+.bp-sheet-fig {
+  flex: 0 0 auto;
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bp-sheet-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bp-sheet-img > svg { width: 100%; height: auto; max-height: 100%; }
+.bp-sheet-img > img { width: 100%; height: 100%; object-fit: contain; }
+.bp-sheet-head { display: block; min-width: 0; }
+.bp-sheet-name {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--c-text-1);
+}
+.bp-sheet-latin {
+  display: block;
+  margin-top: .25rem;
+  font-size: .75rem;
+  font-style: italic;
+  letter-spacing: .04em;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.bp-sheet-kws {
+  margin-top: var(--sp-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+}
+.bp-sheet-rows { margin-top: var(--sp-4); }
+.bp-row {
+  display: flex;
+  gap: var(--sp-3);
+  padding: .5rem 0;
+  border-top: 1px solid rgba(242, 238, 229, .08);
+  font-size: .8125rem;
+  line-height: 1.6;
+}
+.bp-row-k { flex: 0 0 3.25rem; color: var(--c-text-3); }
+.bp-row-v { flex: 1 1 auto; color: var(--c-text-2); word-break: break-word; }
+.bp-sheet-desc {
+  margin-top: var(--sp-4);
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+}
+.bp-sheet-foot {
+  margin-top: var(--sp-5);
+  display: flex;
+  justify-content: center;
+}
+.bp-sheet-foot .btn-ghost { min-width: 8rem; }
+.bp-sheet-hint {
+  margin-top: var(--sp-3);
+  font-size: .6875rem;
+  color: var(--c-text-3);
+  text-align: center;
+}
+
+/* ── 数据异常降级（不白屏） ── */
+.bp-degraded .bp-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 7rem;
+}
+.bp-empty {
+  width: 6.5rem;
+  height: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bp-empty > svg { width: 100%; height: auto; }
+.bp-empty-msg {
+  margin: 1.25rem 0 0;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  text-align: center;
+}
+.bp-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--c-bg) 58%, rgba(12, 11, 9, .86) 82%, rgba(12, 11, 9, 0));
+  z-index: 40;
+}
+.bp-cta { min-width: 11rem; }
+
+/* ── 降级：低端机 / 减少动效 / SKIP_ANIMATION（一律终态，无过渡） ── */
+html[data-lowperf="1"] .bp-arc-dec,
+html[data-reduced="1"] .bp-arc-dec,
+html.bc-skip-anim .bp-arc-dec { display: none; }
+
+html[data-lowperf="1"] .bp-data-fill,
+html[data-lowperf="1"] .bp-node-data,
+html[data-lowperf="1"] .bp-card,
+html[data-reduced="1"] .bp-data-fill,
+html[data-reduced="1"] .bp-node-data,
+html[data-reduced="1"] .bp-card,
+html.bc-skip-anim .bp-data-fill,
+html.bc-skip-anim .bp-node-data,
+html.bc-skip-anim .bp-card,
+html[data-lowperf="1"] .bp-data-line,
+html[data-reduced="1"] .bp-data-line,
+html.bc-skip-anim .bp-data-line {
+  transition: none !important;
+}
+
+/* ── 窄屏微调（320 / 极小屏） ── */
+@media screen and (max-width: 340px) {
+  .bp-title { font-size: 1.375rem; }
+  .bp-type-name { font-size: 1.25rem; }
+  .bp-type { padding: .875rem .9375rem; }
+  .bp-radar-box { width: clamp(216px, 70vw, 240px); height: clamp(216px, 70vw, 240px); }
+  .bp-card { min-height: 4.5rem; padding: .625rem .75rem; gap: .75rem; }
+  .bp-card-fig { width: 3rem; height: 3rem; }
+  .bp-cta { min-width: 9.5rem; }
+}
+
+/* ── 宽屏：略宽留白 / 略大字号（430 上限由 .h5-root 控制） ── */
+@media screen and (min-width: 400px) {
+  .bp-type-name { font-size: 1.4375rem; }
+  .bp-desc-line { font-size: 1rem; }
+}

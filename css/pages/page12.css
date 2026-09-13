@@ -1,0 +1,423 @@
+/* page12.css —— PAGE12 我的本草探索档案（MY HERBAL EXPLORER · 探索收束页 / 数字植物标本 / 当代博物馆记录卡）
+ *
+ * 定位：P11 专属茶饮配方卡 → P12 我的本草探索档案（最终档案）→ P13 分享与保存（未开发）
+ * 复用：base.css 变量、layout.css 的 .page / .page-foot 范式、components.css 的 .btn / .btn-ghost / .tag / .en。
+ *       六维雷达直接复用 page09.css 的 .bp-radar 内部样式（本文件只负责外层容器尺寸 + 入场态）。
+ *       本草主题色经 --ar2-tea（茶饮卡）/ --ar2-accent 注入，取值全部来自既有 PALETTE，未新增颜色。
+ *
+ * 明确不出现：医学诊断界面 / 药房视觉 / 卷轴 / 木纹 / 祥云 / 中式边框 / 中国红 / 大面积金色 / 3D。
+ * 明确不使用：CSS Grid gap（规范禁用，统一 flex + gap 的 flex 布局）。
+ */
+
+.ar2 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  /* 长页面可滚动；底部为固定底栏，预留 clearance = 真实底栏高度 + 安全区 + 24px。
+     --ar2-foot-h 由 js/pages/page12.js 的 syncFootPad() 实测写入（兜底 8.5rem ≈ 两枚按钮纵向堆叠高度），
+     避免简单写死大空白：正文末段与底栏之间只保留安全可读的 24px 余量。 */
+  padding-bottom: calc(var(--ar2-foot-h, 8.5rem) + var(--sab) + 1.5rem);
+}
+
+/* ── 01 档案身份 ── */
+.ar2-head {
+  position: relative;
+  flex: 0 0 auto;
+  padding: .25rem 0 .5rem;
+}
+.ar2-trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.ar2-ring {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .08;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ar2-ring-2 { stroke-opacity: .05; }
+.ar2-arc {
+  fill: none;
+  stroke: var(--c-accent);
+  stroke-opacity: .16;
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.ar2-tick {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .16;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ar2-dot { fill: var(--c-accent); fill-opacity: .38; }
+
+.ar2-eyebrow {
+  position: relative;
+  font-size: .6875rem;
+  letter-spacing: .24em;
+  color: var(--c-text-3);
+}
+.ar2-title {
+  position: relative;
+  margin: .5rem 0 0;
+  font-size: 1.875rem;            /* 主标题，强层级 */
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1.25;
+  color: var(--c-text-1);
+}
+
+/* 档案编号 + 创建时间（展品编号感） */
+.ar2-no {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+  margin-top: .875rem;
+  padding-bottom: .625rem;
+  border-bottom: 1px solid rgba(242, 238, 229, .10);
+}
+.ar2-no-id {
+  font-size: .9375rem;
+  letter-spacing: .2em;
+  color: var(--c-text-2);
+}
+.ar2-no-date {
+  font-size: .6875rem;
+  letter-spacing: .1em;
+  color: var(--c-text-3);
+}
+
+/* ── 02 探索型 ── */
+.ar2-type {
+  flex: 0 0 auto;
+  margin-top: 1.25rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--c-line);
+  border-radius: .75rem;
+  background: rgba(21, 18, 15, .5);
+}
+.ar2-sec-k {
+  font-size: .625rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+.ar2-type-name {
+  margin-top: .5rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  line-height: 1.35;
+  color: var(--c-text-1);
+}
+.ar2-type-kws {
+  margin-top: .75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+}
+
+/* ── 六维雷达（复用 page09.css 的 .bp-radar 内部样式） ── */
+.ar2-radar-wrap {
+  flex: 0 0 auto;
+  margin-top: 1.375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ar2-radar-box {
+  width: clamp(220px, 70vw, 260px);
+  height: clamp(220px, 70vw, 260px);
+  margin: 0 auto;
+}
+.ar2-radar-cap {
+  margin-top: .5rem;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: var(--c-text-3);
+  opacity: .8;
+}
+
+/* ── 03 / 04 / 05 通用区块头 ── */
+.ar2-sec { flex: 0 0 auto; margin-top: 1.75rem; }
+.ar2-sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  padding-bottom: .625rem;
+  border-bottom: 1px solid rgba(242, 238, 229, .08);
+}
+.ar2-sec-t {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--c-text-1);
+}
+.ar2-sec-en {
+  flex: 0 0 auto;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: var(--c-text-3);
+}
+
+/* ── 03 我的三味本草（标本陈列：横向三列） ── */
+.ar2-herb-row {
+  display: flex;
+  gap: .625rem;
+  margin-top: .875rem;
+}
+.ar2-herb {
+  --ar2-herb: #8A9A7B;
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: .75rem .5rem;
+  border: 1px solid var(--c-line);
+  border-radius: .625rem;
+  background: rgba(21, 18, 15, .45);
+  overflow: hidden;
+}
+.ar2-herb::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--ar2-herb);
+  opacity: .38;
+  pointer-events: none;
+}
+.ar2-herb-no {
+  font-size: .6875rem;
+  letter-spacing: .16em;
+  color: var(--ar2-herb, var(--c-text-3));
+  opacity: .8;
+}
+.ar2-herb-fig {
+  position: relative;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin: .5rem 0 .625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ar2-herb-halo { position: absolute; inset: 0; pointer-events: none; }
+.ar2-herb-img {
+  position: relative;
+  width: 78%;
+  height: 78%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ar2-herb-img > svg { width: 100%; height: auto; max-height: 100%; }
+.ar2-herb-img > img { width: 100%; height: 100%; object-fit: contain; }
+.ar2-herb-name {
+  font-size: .9375rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  line-height: 1.3;
+  color: var(--c-text-1);
+  word-break: break-word;
+}
+.ar2-herb-latin {
+  margin-top: .2rem;
+  font-size: .6875rem;
+  font-style: italic;
+  letter-spacing: .04em;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.ar2-herb-field {
+  margin-top: .5rem;
+  font-size: .6875rem;
+  line-height: 1.5;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+
+/* ── 04 我的专属茶饮（呼应 P11：米白卡 + 茶盏 + 色点） ── */
+.ar2-tea-card {
+  --ar2-tea: #8A9A7B;
+  position: relative;
+  margin-top: .875rem;
+  padding: 1.25rem 1.125rem 1.375rem;
+  border-radius: 1rem;
+  background: #F2EEE5;            /* 暖米白卡面 */
+  color: #5B4638;                 /* 卡内主文字 */
+  overflow: hidden;
+}
+.ar2-tea-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  box-shadow: inset 0 0 0 1px rgba(91, 70, 56, .12);
+  pointer-events: none;
+}
+.ar2-tea-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: .875rem;
+}
+.ar2-tea-vessel {
+  width: 4.5rem;
+  height: 4.5rem;
+  flex: 0 0 auto;
+}
+.ar2-tea-vessel-svg { width: 100%; height: 100%; }
+.ar2-tea-dots {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.ar2-tea-dot {
+  width: .875rem;
+  height: .875rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(91, 70, 56, .18);
+}
+.ar2-tea-name {
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  line-height: 1.3;
+  text-align: center;
+}
+.ar2-tea-mats {
+  margin-top: .4rem;
+  font-size: .8125rem;
+  letter-spacing: .08em;
+  color: #81796C;
+  text-align: center;
+}
+
+/* ── 05 探索轨迹 ── */
+.ar2-trail-p {
+  margin: .875rem 0 0;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+}
+
+/* ── 统一免责小字 ── */
+.ar2-note {
+  flex: 0 0 auto;
+  margin: 1.5rem 0 0;
+  font-size: .6875rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  opacity: .72;
+  text-align: center;
+}
+
+/* ── 06 操作按钮（固定底栏） ── */
+.ar2-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--c-bg) 58%, rgba(12, 11, 9, .86) 82%, rgba(12, 11, 9, 0));
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .625rem;
+}
+.ar2-save { min-width: 11rem; }
+.ar2-restart { letter-spacing: .06em; }
+
+/* ── 入场态：区块依次淡入（只动 opacity / transform） ── */
+.ar2-block {
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  transition: opacity .5s ease, -webkit-transform .5s ease, transform .5s ease;
+}
+.ar2-block.is-in {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+/* ── 降级（不白屏） ── */
+.ar2-degraded .ar2-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 7rem;
+}
+.ar2-empty {
+  width: 6.5rem;
+  height: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ar2-empty > svg { width: 100%; height: auto; }
+.ar2-empty-msg {
+  margin: 1.25rem 0 0;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  text-align: center;
+}
+
+/* ── 降级：低端机 / 减少动效 / SKIP_ANIMATION（一律终态，无过渡） ── */
+html[data-lowperf="1"] .ar2-arc,
+html[data-reduced="1"] .ar2-arc,
+html.bc-skip-anim .ar2-arc { display: none; }
+
+html[data-lowperf="1"] .ar2-block,
+html[data-reduced="1"] .ar2-block,
+html.bc-skip-anim .ar2-block {
+  opacity: 1 !important;
+  -webkit-transform: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* ── 窄屏微调（320 / 极小屏） ── */
+@media screen and (max-width: 340px) {
+  .ar2-title { font-size: 1.625rem; }
+  .ar2-type-name { font-size: 1.25rem; }
+  .ar2-type { padding: .875rem .9375rem; }
+  .ar2-radar-box { width: clamp(216px, 70vw, 240px); height: clamp(216px, 70vw, 240px); }
+  .ar2-herb-row { gap: .5rem; }
+  .ar2-herb { padding: .625rem .375rem; }
+  .ar2-herb-fig { width: 3rem; height: 3rem; }
+  .ar2-herb-name { font-size: .875rem; }
+  .ar2-save { min-width: 9.5rem; }
+}
+
+/* ── 宽屏：略大字号（430 上限由 .h5-root 控制） ── */
+@media screen and (min-width: 400px) {
+  .ar2-title { font-size: 2rem; }
+  .ar2-type-name { font-size: 1.4375rem; }
+  .ar2-tea-name { font-size: 1.5rem; }
+}

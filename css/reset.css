@@ -1,0 +1,31 @@
+/* reset.css —— 浏览器默认样式归零（含 -webkit- 前缀项） */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body, div, span, section, article, header, footer, main, aside, nav,
+h1, h2, h3, h4, h5, h6, p, ul, ol, li, a, img, picture, figure, button, input,
+textarea, label, small, strong, em, b, i, dl, dt, dd, table, tr, td, th, svg {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  -webkit-tap-highlight-color: transparent;
+}
+
+ul, ol { list-style: none; }
+img, picture, svg, video { display: block; max-width: 100%; }
+button { background: none; cursor: pointer; color: inherit; -webkit-appearance: none; appearance: none; }
+a { color: inherit; text-decoration: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+/* 移动端：禁止长按选中与双击缩放（P13 长图单独放开） */
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;      /* 禁止双击放大（iOS 15+ 关键） */
+  overscroll-behavior: none;       /* 防橡皮筋 */
+}

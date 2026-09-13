@@ -1,0 +1,430 @@
+/* page11.css —— PAGE11 专属茶饮配方卡（TEA FORMULA）
+   视觉系统：数字本草博物馆 / 当代本草插画 / 东方自然感 / 年轻化 / 平面设计感
+   深色底（#0C0B09）+ 中央暖米白配方卡（#F2EEE5）+ 大标题 + 图文混排 + 细线标注
+   禁止：复杂 3D / 写实摄影 / 传统药铺 / 卷轴 / 木纹 / 复杂国风纹样 / 中国红 / 大面积金色 */
+
+/* ─────────── 容器 ─────────── */
+.tp {
+  position: relative;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding-bottom: 7rem;          /* 让位固定底栏（>= 底栏高度） */
+}
+
+/* ─────────── 配方图鉴卡 ─────────── */
+.tp-card {
+  position: relative;
+  width: 86%;                    /* 84–88% */
+  max-width: 26rem;
+  min-height: 72vh;              /* 高度约 72–78%（内容更高时向下生长） */
+  min-height: 72dvh;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 1.125rem;
+  background: #F2EEE5;
+  border-radius: 23px;           /* 22–24px */
+  overflow: visible;             /* 允许插画轻微越出卡片边缘 */
+  color: #5B4638;
+  -webkit-box-shadow: 0 18px 44px rgba(0, 0, 0, .46), inset 0 0 0 1px rgba(91, 70, 56, .12);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .46), inset 0 0 0 1px rgba(91, 70, 56, .12);
+  opacity: 0;
+  -webkit-transform: translateY(14px);
+  transform: translateY(14px);
+  -webkit-transition: opacity .36s ease, -webkit-transform .36s ease;
+  transition: opacity .36s ease, transform .36s ease;
+}
+.tp-card.is-in { opacity: 1; -webkit-transform: none; transform: none; }
+
+/* 纸感 / 标本感（极轻，纯 CSS 纹理，不引入位图） */
+.tp-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 76% at 50% 0%, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 62%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 56, .03) 0 1px, rgba(0, 0, 0, 0) 1px 4px);
+  pointer-events: none;
+}
+
+/* ─────────── 顶部：编号 + 主标题区 ─────────── */
+.tp-head { text-align: center; }
+.tp-idx { font-size: .625rem; letter-spacing: .22em; color: rgba(91, 70, 56, .5); }
+.tp-kicker {
+  margin-top: .5rem;
+  font-size: .8125rem;
+  letter-spacing: .12em;
+  color: rgba(91, 70, 56, .62);
+}
+.tp-tea-name {
+  margin: .375rem 0 0;
+  font-size: clamp(1.75rem, 7.6vw, 2.25rem);   /* 375 基准约 28px，向上自动缩放 */
+  line-height: 1.14;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: #5B4638;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  -webkit-transition: opacity .36s ease, -webkit-transform .36s ease;
+  transition: opacity .36s ease, transform .36s ease;
+}
+.tp-tea-name.is-in { opacity: 1; -webkit-transform: none; transform: none; }
+.tp-herb-x {
+  margin-top: .375rem;
+  font-size: 1rem;
+  letter-spacing: .04em;
+  color: rgba(91, 70, 56, .72);
+}
+
+/* ─────────── 主视觉：组合插画 + 茶盏 + 标注 ─────────── */
+.tp-visual {
+  position: relative;
+  margin: 1.1rem 0 .25rem;
+  height: clamp(13rem, 54vw, 17rem);   /* 放大主视觉，两味本草更突出 */
+}
+.tp-trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.tp-vessel {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  width: 46%;
+  max-width: 11.5rem;
+  z-index: 2;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  opacity: 0;
+  -webkit-transition: opacity .4s ease;
+  transition: opacity .4s ease;
+}
+.tp-vessel.is-in { opacity: 1; }
+.tp-vessel-svg { display: block; width: 100%; height: auto; }
+
+/* 两味本草插画：一味左上 / 一味右下，可轻微越出卡片；figB 位于 figA 之前（前后遮挡） */
+.tp-fig {
+  position: absolute;
+  width: 52%;                    /* 放大，成为视觉主体 */
+  opacity: 0;
+  -webkit-transition: opacity .38s ease, -webkit-transform .38s ease;
+  transition: opacity .38s ease, transform .38s ease;
+}
+.tp-fig-svg { display: block; width: 100%; height: auto; position: relative; z-index: 1; }
+.tp-fig-halo {
+  position: absolute;
+  inset: -10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, .38), rgba(255, 255, 255, 0) 68%);
+  z-index: 0;
+}
+.tp-fig-a {
+  left: -14%;                    /* 轻微越出卡片左缘，形成「元素突破边界」的层叠感 */
+  top: -6%;
+  z-index: 3;
+  -webkit-transform: translateX(-12%) scale(.96) rotate(-3deg);
+  transform: translateX(-12%) scale(.96) rotate(-3deg);
+}
+.tp-fig-b {
+  right: -14%;                   /* 轻微越出卡片右缘 */
+  bottom: -3%;
+  z-index: 4;
+  -webkit-transform: translateX(10%) scale(.96) rotate(3deg);
+  transform: translateX(10%) scale(.96) rotate(3deg);
+}
+.tp-fig.is-in { opacity: 1; -webkit-transform: none; transform: none; }
+
+/* 图文标注：小字号 + 低对比 + 细线连接（本页 2 个，<= 4）；博物馆标本注释感 */
+.tp-annot {
+  position: absolute;
+  z-index: 5;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  opacity: 0;
+  -webkit-transition: opacity .4s ease;
+  transition: opacity .4s ease;
+}
+.tp-annot.is-in { opacity: 1; }
+.tp-annot-line {
+  display: block;
+  width: 1.75rem;
+  height: 1px;
+  background: rgba(91, 70, 56, .4);
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+.tp-annot-tx {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  line-height: 1.25;
+}
+.tp-annot-cn { font-size: .6875rem; color: rgba(91, 70, 56, .8); }
+.tp-annot-en { font-size: .5625rem; letter-spacing: .14em; color: rgba(91, 70, 56, .46); }
+
+/* 标注 A：位于插画 A 右侧，细线向左上指向插画 A */
+.tp-annot-a { left: 31%; top: 6%; }
+.tp-annot-a .tp-annot-line {
+  -webkit-transform: rotate(-40deg);
+  transform: rotate(-40deg);
+  -webkit-transform-origin: right center;
+  transform-origin: right center;
+  margin-right: .3rem;
+}
+/* 标注 B：位于插画 B 左侧，细线向右下指向插画 B */
+.tp-annot-b { right: 31%; bottom: 9%; -webkit-flex-direction: row-reverse; flex-direction: row-reverse; }
+.tp-annot-b .tp-annot-line {
+  -webkit-transform: rotate(-40deg);
+  transform: rotate(-40deg);
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+  margin-left: .3rem;
+}
+.tp-annot-b .tp-annot-tx {
+  -webkit-box-align: end;
+  -webkit-align-items: flex-end;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* ─────────── 信息区：本草组成 + 描述 + 风味联想 ─────────── */
+.tp-info { margin-top: .875rem; }
+.tp-info-head {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: baseline;
+  -webkit-align-items: baseline;
+  align-items: baseline;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  padding-top: .625rem;
+  border-top: 1px solid rgba(91, 70, 56, .22);
+}
+.tp-info-t { font-size: .8125rem; font-weight: 600; letter-spacing: .1em; color: #5B4638; }
+.tp-info-en { font-size: .5625rem; letter-spacing: .2em; color: rgba(91, 70, 56, .45); }
+
+.tp-list { margin-top: .375rem; }
+.tp-item {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: .4rem 0;
+  border-bottom: 1px dashed rgba(91, 70, 56, .16);
+}
+.tp-item:last-child { border-bottom: 0; }
+.tp-item-n { width: 1.6rem; font-size: .625rem; color: rgba(91, 70, 56, .5); }
+.tp-item-m {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+}
+.tp-item-name { font-size: .875rem; color: #5B4638; }
+.tp-item-en { font-size: .5625rem; letter-spacing: .14em; color: rgba(91, 70, 56, .45); }
+.tp-item-dot {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: .75rem;
+  height: .75rem;
+  border-radius: 50%;
+}
+.tp-item[data-in-tea="1"] .tp-item-dot {
+  -webkit-box-shadow: 0 0 0 2px rgba(255, 255, 255, .72);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .72);
+}
+
+.tp-desc {
+  margin: .75rem 0 0;
+  font-size: .8125rem;
+  line-height: 1.7;
+  color: rgba(91, 70, 56, .72);
+}
+.tp-flavor {
+  margin-top: .5rem;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: baseline;
+  -webkit-align-items: baseline;
+  align-items: baseline;
+}
+.tp-flavor-k {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  margin-right: .5rem;
+  font-size: .5625rem;
+  letter-spacing: .18em;
+  color: rgba(91, 70, 56, .45);
+}
+.tp-flavor-v { font-size: .75rem; color: rgba(91, 70, 56, .7); }
+
+.tp-plate {
+  margin-top: .875rem;
+  font-size: .5rem;
+  letter-spacing: .2em;
+  text-align: center;
+  color: rgba(91, 70, 56, .32);
+}
+
+/* ─────────── 保存态（页面内状态） ─────────── */
+.tp-card.is-saved {
+  -webkit-box-shadow: 0 18px 44px rgba(0, 0, 0, .46), inset 0 0 0 2px rgba(91, 70, 56, .32);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .46), inset 0 0 0 2px rgba(91, 70, 56, .32);
+}
+.tp-card.is-saved::after {
+  content: "SAVED · 已保存";
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: .1875rem .5rem;
+  border: 1px solid rgba(91, 70, 56, .3);
+  border-radius: 999px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: .5rem;
+  letter-spacing: .16em;
+  color: rgba(91, 70, 56, .5);
+}
+.tp-save.is-saved { background: rgba(91, 70, 56, .22); color: #5B4638; }
+
+/* ─────────── 免责声明 / 保存引导 ─────────── */
+.tp-note {
+  margin: 1rem 1.25rem 0;
+  max-width: 24rem;
+  font-size: .6875rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  text-align: center;
+}
+.tp-save-hint {
+  margin: .5rem 0 0;
+  font-size: .6875rem;
+  color: var(--c-text-3);
+  text-align: center;
+}
+.tp-save-hint[hidden] { display: none; }
+
+/* ─────────── 底部固定操作区 ─────────── */
+.tp-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  background: linear-gradient(to top, rgba(12, 11, 9, .97) 58%, rgba(12, 11, 9, 0));
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  z-index: 50;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+.tp-foot .btn,
+.tp-foot .btn-ghost { width: 100%; max-width: 20rem; }
+.tp-foot .tp-next { margin-top: .625rem; }
+
+/* ─────────── 降级（不白屏） ─────────── */
+.tp-degraded .tp-card-empty {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  opacity: 1;
+  -webkit-transform: none;
+  transform: none;
+}
+.tp-empty-fig { width: clamp(7rem, 32vw, 10rem); margin: 1rem 0; }
+.tp-empty-msg { font-size: .875rem; color: rgba(91, 70, 56, .75); }
+
+/* ─────────── 窄屏 320 ─────────── */
+@media screen and (max-width: 340px) {
+  .tp-card {
+    width: 88%;
+    padding: 1.25rem 1rem 1rem;
+    border-radius: 20px;
+  }
+  .tp-visual { height: clamp(11rem, 50vw, 13rem); }
+  .tp-fig { width: 48%; }
+  .tp-annot-a { left: 28%; }
+  .tp-annot-b { right: 28%; }
+  .tp-desc { font-size: .75rem; }
+}
+
+/* ─────────── 宽屏 400+ ─────────── */
+@media screen and (min-width: 400px) {
+  .tp-card { width: 84%; border-radius: 24px; }
+}
+
+/* ─────────── 动效降级：低性能 / 减少动效 / SKIP_ANIMATION → 直接终态 ─────────── */
+html[data-reduced="1"] .tp-card,
+html[data-lowperf="1"] .tp-card,
+html.bc-skip-anim .tp-card,
+html[data-reduced="1"] .tp-fig,
+html[data-lowperf="1"] .tp-fig,
+html.bc-skip-anim .tp-fig,
+html[data-reduced="1"] .tp-tea-name,
+html[data-lowperf="1"] .tp-tea-name,
+html.bc-skip-anim .tp-tea-name,
+html[data-reduced="1"] .tp-vessel,
+html[data-lowperf="1"] .tp-vessel,
+html.bc-skip-anim .tp-vessel,
+html[data-reduced="1"] .tp-annot,
+html[data-lowperf="1"] .tp-annot,
+html.bc-skip-anim .tp-annot {
+  -webkit-transition: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  -webkit-transform: none !important;
+  transform: none !important;
+}

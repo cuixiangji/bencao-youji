@@ -1,0 +1,76 @@
+/* animations.css —— 全部 @keyframes（只动 transform / opacity，走合成层） */
+
+@-webkit-keyframes bc-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bc-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* 淡出（Step 4.4 / P08 单题流水线：当前题淡出 → 下一题淡入上升） */
+@-webkit-keyframes bc-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes bc-fade-out { from { opacity: 1; } to { opacity: 0; } }
+
+@-webkit-keyframes bc-rise {
+  from { opacity: 0; -webkit-transform: translateY(12px); transform: translateY(12px); }
+  to   { opacity: 1; -webkit-transform: translateY(0);    transform: translateY(0); }
+}
+@keyframes bc-rise {
+  from { opacity: 0; -webkit-transform: translateY(12px); transform: translateY(12px); }
+  to   { opacity: 1; -webkit-transform: translateY(0);    transform: translateY(0); }
+}
+
+@-webkit-keyframes bc-grow {
+  from { opacity: 0; -webkit-transform: scale(.86); transform: scale(.86); }
+  to   { opacity: 1; -webkit-transform: scale(1);   transform: scale(1); }
+}
+@keyframes bc-grow {
+  from { opacity: 0; -webkit-transform: scale(.86); transform: scale(.86); }
+  to   { opacity: 1; -webkit-transform: scale(1);   transform: scale(1); }
+}
+
+@-webkit-keyframes bc-float {
+  0%   { -webkit-transform: translateY(0);     transform: translateY(0); }
+  50%  { -webkit-transform: translateY(-6px);  transform: translateY(-6px); }
+  100% { -webkit-transform: translateY(0);     transform: translateY(0); }
+}
+@keyframes bc-float {
+  0%   { -webkit-transform: translateY(0);    transform: translateY(0); }
+  50%  { -webkit-transform: translateY(-6px); transform: translateY(-6px); }
+  100% { -webkit-transform: translateY(0);    transform: translateY(0); }
+}
+
+@-webkit-keyframes bc-ripple {
+  from { opacity: .5; -webkit-transform: scale(.4); transform: scale(.4); }
+  to   { opacity: 0;  -webkit-transform: scale(1.8); transform: scale(1.8); }
+}
+@keyframes bc-ripple {
+  from { opacity: .5; -webkit-transform: scale(.4); transform: scale(.4); }
+  to   { opacity: 0;  -webkit-transform: scale(1.8); transform: scale(1.8); }
+}
+
+/* 动画工具类 */
+.anim-fade  { -webkit-animation: bc-fade-in .5s ease both; animation: bc-fade-in .5s ease both; }
+.anim-fade-out { -webkit-animation: bc-fade-out .16s ease both; animation: bc-fade-out .16s ease both; }
+.anim-rise  { -webkit-animation: bc-rise .6s ease both;    animation: bc-rise .6s ease both; }
+.anim-grow  { -webkit-animation: bc-grow .6s ease both;    animation: bc-grow .6s ease both; }
+.anim-float { -webkit-animation: bc-float 4s ease-in-out infinite; animation: bc-float 4s ease-in-out infinite; }
+
+/* 雷达线条生长（SVG stroke-dasharray 由 JS 设置，此处只管过渡） */
+.bc-radar-path {
+  transition: stroke-dashoffset 1.1s ease-out, opacity .6s ease;
+}
+
+/* ── 降级：低性能 / 减少动效 / SKIP_ANIMATION ── */
+html[data-lowperf="1"] .anim-float,
+html[data-reduced="1"] .anim-float,
+html.bc-skip-anim .anim-float { -webkit-animation: none !important; animation: none !important; }
+
+html[data-reduced="1"] .anim-fade,
+html[data-reduced="1"] .anim-fade-out,
+html[data-reduced="1"] .anim-rise,
+html[data-reduced="1"] .anim-grow,
+html[data-lowperf="1"] .anim-fade-out,
+html.bc-skip-anim .anim-fade,
+html.bc-skip-anim .anim-fade-out,
+html.bc-skip-anim .anim-rise,
+html.bc-skip-anim .anim-grow {
+  -webkit-animation-duration: .01s !important;
+  animation-duration: .01s !important;
+}

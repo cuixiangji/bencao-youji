@@ -1,0 +1,666 @@
+/* page10.css —— PAGE10 本草实验室（HERBAL LAB · 数字本草实验室 / 轻互动调配）
+ *
+ * 定位：P09 本草身体画像（观察结果）→ P10 本草实验室（创造 / 调配）→ P11 专属茶饮配方卡
+ * 复用：base.css 变量、layout.css 的 .page / .page-foot 范式、components.css 的 .btn / .btn-text / .tag。
+ *       本草主题色仅经 --hl-herb（单元素）注入，取值全部来自既有 PALETTE（BC.render.herbColor），未新增颜色。
+ *       茶饮混色只用 selectedTea.visual_color（既有派生数据），不另造色板。
+ *
+ * 明确不出现：医院 / 药房 / 化学实验室器材堆砌 / 试管墙 / 烧杯写实 3D / 中药铺 /
+ *             中国红 / 大面积金色 / 游戏爆炸特效 / 强发光 / WebGL。
+ * 明确不使用：卷轴 / 木纹 / 中式边框 / 祥云 / CSS Grid gap（规范禁用）。
+ * 动效只作用于 opacity / transform / stroke-dashoffset，且低性能与 reduced-motion 一律收敛到终态。
+ */
+
+.hl {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-bottom: 7rem;      /* 给固定底栏（仅选择阶段出现）让位，绝不遮挡内容 */
+}
+
+/* ── ① 顶部：眉标 + 主标题 + 副标题 + 极淡装饰层 ── */
+.hl-head {
+  position: relative;
+  flex: 0 0 auto;
+  padding: .25rem 0 .875rem;
+}
+.hl-trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.hl-ring-dec {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .08;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hl-ring-dec-2 { stroke-opacity: .05; }
+.hl-arc-dec {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .10;
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.hl-tick-dec {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .14;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hl-dot-dec { fill: var(--c-text-1); fill-opacity: .22; }
+
+.hl-eyebrow {
+  position: relative;
+  font-size: .6875rem;
+  letter-spacing: .24em;
+  color: var(--c-text-3);
+}
+.hl-title {
+  position: relative;
+  margin: .5rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1.25;
+  color: var(--c-text-1);
+}
+.hl-sub {
+  position: relative;
+  margin: .375rem 0 0;
+  font-size: .8125rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+}
+
+.hl-stage { flex: 1 1 auto; min-height: 0; }
+
+/* ── ② 阶段一：选择一味本草（只显示 recommendedHerbs 的 3 张） ── */
+.hl-sec {
+  margin-top: 1rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid rgba(242, 238, 229, .08);
+}
+.hl-sec-k {
+  font-size: .625rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+.hl-sec-t {
+  margin: .375rem 0 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: .08em;
+  color: var(--c-text-1);
+}
+.hl-sec-d {
+  margin: .3125rem 0 0;
+  font-size: .75rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+}
+
+.hl-cards {
+  display: flex;
+  flex-direction: column;
+  gap: .625rem;
+  margin-top: .875rem;
+}
+/* 整卡可点（原生 button）→ 热区远大于 44×44；不依赖 hover */
+.hl-card {
+  --hl-herb: #8A9A7B;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .875rem;
+  width: 100%;
+  min-height: 4.75rem;
+  padding: .75rem .875rem;
+  border: 1px solid var(--c-line);
+  border-radius: .625rem;
+  background: rgba(21, 18, 15, .55);
+  text-align: left;
+  overflow: hidden;
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  transition: opacity .45s ease, border-color .3s ease,
+    -webkit-transform .45s ease, transform .45s ease;
+}
+.hl-card:active {
+  -webkit-transform: scale(.985);
+  transform: scale(.985);
+}
+/* 左侧本草色细条 */
+.hl-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--hl-herb);
+  opacity: .34;
+  pointer-events: none;
+}
+.hl-card-fig {
+  position: relative;
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hl-card-halo { position: absolute; inset: 0; pointer-events: none; }
+.hl-card-img {
+  position: relative;
+  width: 76%;
+  height: 76%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hl-card-img > svg { width: 100%; height: auto; max-height: 100%; }
+.hl-card-img > img { width: 100%; height: 100%; object-fit: contain; }
+.hl-card-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .25rem;
+}
+.hl-card-name {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--c-text-1);
+  word-break: break-word;
+}
+.hl-card-kw {
+  font-size: .75rem;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.hl-card-no {
+  flex: 0 0 auto;
+  margin-left: .25rem;
+  font-size: .6875rem;
+  letter-spacing: .16em;
+  color: var(--hl-herb, var(--c-text-3));
+  opacity: .7;
+}
+
+/* 选中 / 轻度锁定（顺序很重要：.is-dim 必须排在 .is-in 之后且提高特指度） */
+.hl-card.is-in { opacity: 1; -webkit-transform: none; transform: none; }
+.hl-card.is-in.is-dim { opacity: .34; }
+.hl-card.is-on {
+  border-color: var(--hl-herb);
+  background: rgba(21, 18, 15, .82);
+}
+.hl-card.is-on::before { opacity: .82; }
+.hl-card.is-on .hl-card-name { color: var(--c-text-1); }
+.hl-card:disabled { opacity: .3; }
+
+.hl-pick-hint,
+.hl-mix-hint {
+  margin: 1rem 0 0;
+  font-size: .6875rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+  text-align: center;
+}
+
+/* ── ③ 阶段二：调配（LAB / MIXING） ── */
+.hl-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .375rem;
+  padding: 1rem 0 .25rem;
+  text-align: center;
+}
+.hl-state-k {
+  font-size: .625rem;
+  letter-spacing: .24em;
+  color: var(--c-text-3);
+}
+.hl-state-t {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--c-text-1);
+}
+.hl-count {
+  font-size: .75rem;
+  letter-spacing: .06em;
+  color: var(--c-text-3);
+}
+.hl-count b { color: var(--c-text-2); font-weight: 500; }
+
+.hl-lab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: .75rem;
+}
+/* 圆形操作台：宽度 74vw（≥ 屏宽 60%），高宽比锁定 1 : 1.1，与杯体 viewBox 一致 → 无留白误差 */
+.hl-bench {
+  --hl-bench-w: clamp(196px, 74vw, 320px);
+  position: relative;
+  width: var(--hl-bench-w);
+  height: calc(var(--hl-bench-w) * 1.1);
+  margin: 0 auto;
+  max-width: 100%;
+}
+.hl-bench-svg,
+.hl-cup-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 操作台：极细线 + 低透明度（数字博物馆的台面，而非实验室器材） */
+.hl-bench-c {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .06;
+  stroke-width: 1;
+}
+.hl-bench-c2 {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .04;
+  stroke-width: 1;
+}
+.hl-bench-arc {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .12;
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+}
+.hl-bench-tick {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .14;
+  stroke-width: 1;
+}
+.hl-bench-node { fill: var(--c-text-1); fill-opacity: .22; }
+
+/* 玻璃杯：透明轮廓 + 1px 细描边 + 轻微半透明内部 + 底部水平基准线 */
+.hl-glass {
+  fill: rgba(242, 238, 229, .028);
+  stroke: var(--c-text-1);
+  stroke-opacity: .34;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.hl-glass-rim {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .20;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hl-glass-mouth {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .13;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hl-glass-base {
+  stroke: var(--c-text-1);
+  stroke-opacity: .16;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hl-glass-tick {
+  stroke: var(--c-text-1);
+  stroke-opacity: .14;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* 杯子命中区（拖拽判定 + 视觉容器）：与操作台同尺寸 */
+.hl-cup-hit {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 杯中材料层次：百分比与杯体 viewBox 一一对应（左 27% / 右 27% / 上 21% / 下 11%） */
+.hl-layers {
+  position: absolute;
+  left: 27%;
+  right: 27%;
+  top: 21%;
+  bottom: 11%;
+}
+.hl-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 58%;
+  border-radius: 50%;
+  opacity: 0;
+  -webkit-transform: scale(.7);
+  transform: scale(.7);
+  transition: opacity .5s ease, -webkit-transform .6s ease, transform .6s ease;
+  pointer-events: none;
+}
+.hl-layer[data-slot="1"] { bottom: 0; }
+.hl-layer[data-slot="2"] { top: 0; }
+.hl-layer.is-on { opacity: 1; -webkit-transform: scale(1); transform: scale(1); }
+
+/* 材料落杯时的轻微扩散（无强度发光、无粒子） */
+.hl-plume {
+  position: absolute;
+  left: 24%;
+  right: 24%;
+  top: 17%;
+  bottom: 7%;
+  border-radius: 50%;
+  opacity: 0;
+  -webkit-transform: scale(.72);
+  transform: scale(.72);
+  transition: opacity .45s ease, -webkit-transform .65s ease, transform .65s ease;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(242, 238, 229, .10) 0%, rgba(242, 238, 229, .03) 50%, rgba(12, 11, 9, 0) 76%);
+  pointer-events: none;
+}
+.hl-plume.is-pulse { opacity: 1; -webkit-transform: scale(1); transform: scale(1); }
+
+/* 完成时的温和本草色光晕（inset:0，渐变到全透明收边，绝不越出容器） */
+.hl-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+.hl-glow.is-on { opacity: 1; }
+
+.hl-cup-cap {
+  margin-top: .5rem;
+  font-size: .625rem;
+  letter-spacing: .2em;
+  color: var(--c-text-3);
+  opacity: .8;
+}
+
+/* ── ④ 材料：恰好 2 味（selectedTea.materials） ── */
+.hl-mats {
+  display: flex;
+  flex-direction: column;
+  gap: .625rem;
+  margin-top: 1.125rem;
+}
+.hl-mat {
+  --hl-herb: #8A9A7B;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+  min-height: 4rem;            /* 14px 根字号下仍 = 56px（≥56 要求） */
+  padding: .5rem .75rem;
+  border: 1px solid var(--c-line);
+  border-radius: .625rem;
+  background: rgba(21, 18, 15, .55);
+  text-align: left;
+  overflow: hidden;
+  opacity: 0;
+  -webkit-transform: translateY(8px);
+  transform: translateY(8px);
+  transition: opacity .45s ease, border-color .3s ease,
+    -webkit-transform .45s ease, transform .45s ease;
+  cursor: grab;
+  -webkit-tap-highlight-color: transparent;
+}
+.hl-mat::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--hl-herb);
+  opacity: .34;
+  pointer-events: none;
+}
+.hl-mat-fig {
+  position: relative;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hl-mat-halo { position: absolute; inset: 0; pointer-events: none; }
+.hl-mat-img {
+  position: relative;
+  width: 78%;
+  height: 78%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hl-mat-img > svg { width: 100%; height: auto; max-height: 100%; }
+.hl-mat-img > img { width: 100%; height: 100%; object-fit: contain; }
+.hl-mat-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .125rem;
+}
+.hl-mat-name {
+  font-size: .9375rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--c-text-1);
+  word-break: break-word;
+}
+.hl-mat-amt {
+  font-size: .6875rem;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.hl-mat-state {
+  flex: 0 0 auto;
+  margin-left: .25rem;
+  padding: .1875rem .5rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  font-size: .6875rem;
+  color: var(--c-text-3);
+  white-space: nowrap;
+}
+.hl-mat-no {
+  flex: 0 0 auto;
+  margin-left: .375rem;
+  font-size: .625rem;
+  letter-spacing: .16em;
+  color: var(--hl-herb, var(--c-text-3));
+  opacity: .66;
+}
+
+.hl-mat.is-in { opacity: 1; -webkit-transform: none; transform: none; }
+.hl-mat.is-added {
+  border-color: var(--hl-herb);
+  background: rgba(21, 18, 15, .78);
+}
+.hl-mat.is-added::before { opacity: .8; }
+.hl-mat.is-added .hl-mat-state {
+  border-color: var(--hl-herb);
+  color: var(--hl-herb);
+}
+/* 拖拽中：抬起 + 提高层级（仅 transform / 无滤镜） */
+.hl-mat.is-drag {
+  z-index: 55;
+  opacity: .92;
+  border-color: var(--hl-herb);
+  cursor: grabbing;
+}
+
+/* ── ⑤ 完成态 ── */
+.hl-done {
+  flex: 0 0 auto;
+  min-height: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  margin-top: .5rem;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.hl-done.is-on { opacity: 1; }
+.hl-done-t {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .18em;
+  color: var(--c-text-1);
+}
+.hl-done-en {
+  font-size: .625rem;
+  letter-spacing: .24em;
+  color: var(--c-text-3);
+}
+
+/* ── ⑥ 材料飞入杯中的临时形态 ── */
+.hl-fly {
+  position: fixed;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: -.75rem 0 0 -.75rem;
+  border-radius: 50%;
+  opacity: .9;
+  pointer-events: none;
+  z-index: 70;
+  transition: -webkit-transform .42s cubic-bezier(.3, .85, .42, 1),
+    transform .42s cubic-bezier(.3, .85, .42, 1), opacity .42s ease;
+}
+.hl-fly.is-go { opacity: .12; }
+
+/* ── ⑦ 免责小字 + 固定底栏 ── */
+.hl-note {
+  flex: 0 0 auto;
+  margin: 1.25rem 0 0;
+  font-size: .6875rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  opacity: .72;
+  text-align: center;
+}
+.hl-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--c-bg) 58%, rgba(12, 11, 9, .86) 82%, rgba(12, 11, 9, 0));
+  z-index: 40;
+}
+/* 调配阶段没有主按钮 → 整条底栏隐藏（hidden 必须显式覆盖 display:flex） */
+.hl-foot[hidden] { display: none; }
+.hl-cta { min-width: 11rem; }
+
+/* ── ⑧ 数据异常降级（不白屏，不自造茶饮） ── */
+.hl-degraded { padding-bottom: 7rem; }
+.hl-degraded .hl-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 7rem;
+}
+.hl-empty {
+  width: 6.5rem;
+  height: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hl-empty > svg { width: 100%; height: auto; }
+.hl-empty-msg {
+  margin: 1.25rem 0 0;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  text-align: center;
+}
+
+/* ── 降级：低端机 / 减少动效 / SKIP_ANIMATION（一律终态，无过渡） ── */
+html[data-lowperf="1"] .hl-arc-dec,
+html[data-reduced="1"] .hl-arc-dec,
+html.bc-skip-anim .hl-arc-dec { display: none; }
+
+html[data-lowperf="1"] .hl-card,
+html[data-lowperf="1"] .hl-mat,
+html[data-lowperf="1"] .hl-layer,
+html[data-lowperf="1"] .hl-plume,
+html[data-lowperf="1"] .hl-glow,
+html[data-lowperf="1"] .hl-done,
+html[data-lowperf="1"] .hl-fly,
+html[data-reduced="1"] .hl-card,
+html[data-reduced="1"] .hl-mat,
+html[data-reduced="1"] .hl-layer,
+html[data-reduced="1"] .hl-plume,
+html[data-reduced="1"] .hl-glow,
+html[data-reduced="1"] .hl-done,
+html[data-reduced="1"] .hl-fly,
+html.bc-skip-anim .hl-card,
+html.bc-skip-anim .hl-mat,
+html.bc-skip-anim .hl-layer,
+html.bc-skip-anim .hl-plume,
+html.bc-skip-anim .hl-glow,
+html.bc-skip-anim .hl-done,
+html.bc-skip-anim .hl-fly {
+  transition: none !important;
+}
+
+/* ── 窄屏微调（320 / 极小屏） ── */
+@media screen and (max-width: 340px) {
+  .hl-title { font-size: 1.375rem; }
+  .hl-sec-t { font-size: 1.0625rem; }
+  .hl-state-t { font-size: 1rem; }
+  .hl-bench { --hl-bench-w: clamp(180px, 72vw, 280px); }
+  .hl-card { min-height: 4.5rem; padding: .625rem .75rem; gap: .75rem; }
+  .hl-card-fig { width: 2.5rem; height: 2.5rem; }
+  .hl-mat { min-height: 4rem; padding: .4375rem .625rem; gap: .625rem; }
+  .hl-mat-fig { width: 2.125rem; height: 2.125rem; }
+  .hl-mat-state { display: none; }
+  .hl-cta { min-width: 9.5rem; }
+}
+
+/* ── 宽屏：略宽留白 / 略大字号（430 上限由 .h5-root 控制） ── */
+@media screen and (min-width: 400px) {
+  .hl-sec-t { font-size: 1.1875rem; }
+  .hl-state-t { font-size: 1.125rem; }
+}

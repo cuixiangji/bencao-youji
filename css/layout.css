@@ -1,0 +1,63 @@
+/* layout.css —— 容器 / 页面屏 / 顶栏 / 安全区 */
+
+.h5-root {
+  position: relative;
+  width: 100%;
+  max-width: 430px;            /* 平板/折叠屏：居中，两侧留黑 */
+  margin: 0 auto;
+  overflow-x: hidden;
+  background: var(--c-bg);
+}
+
+/* 页面屏：三重写法规避 iOS Safari 地址栏与 X5 差异 */
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+  padding: calc(3rem + var(--sat)) var(--sp-5) calc(2rem + var(--sab));
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+.page[hidden] { display: none; }
+
+/* 顶部固定区：返回按钮 + 阶段指示 */
+.bc-topbar {
+  position: fixed;
+  top: 0; left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: calc(2.75rem + var(--sat));
+  padding: var(--sat) var(--sp-4) 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 60;
+  pointer-events: none;        /* 只有按钮可点 */
+}
+.bc-topbar > * { pointer-events: auto; }
+
+/* 阶段指示（不显示 13 屏编号） */
+.bc-stage {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: .6875rem;
+  letter-spacing: .18em;
+  color: var(--c-text-3);
+}
+
+/* 底部操作区 */
+.page-foot {
+  margin-top: auto;
+  padding-top: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 安全区辅助 */
+.safe-top    { padding-top: calc(var(--sp-3) + var(--sat)); }
+.safe-bottom { padding-bottom: calc(var(--sp-4) + var(--sab)); }

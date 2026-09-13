@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<meta name="theme-color" content="#0C0B09">
+<meta name="description" content="我的本草旅程 —— 数字本草探索互动体验">
+<title>我的本草旅程</title>
+
+<!-- 首屏兜底样式（内联，不依赖外部 CSS） -->
+<style>
+  html,body{margin:0;padding:0;background:#0C0B09;color:#B9B2A5;
+    font-family:system-ui,-apple-system,"PingFang SC","HarmonyOS Sans SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif;}
+  #bc-boot{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:500;}
+  .boot-title{font-size:1.25rem;color:#F2EEE5;letter-spacing:.3em;text-indent:.3em;}
+  .boot-sub{font-size:.75rem;color:#81796C;letter-spacing:.2em;}
+  .boot-seed{width:3rem;height:3rem;border-radius:50%;border:1px solid rgba(242,238,229,.16);}
+  #bc-boot[data-state="error"] .boot-sub{color:#C05B4D;}
+  .boot-retry{display:none;margin-top:.5rem;padding:.5rem 1.25rem;border:1px solid rgba(242,238,229,.24);
+    border-radius:999px;color:#F2EEE5;font-size:.875rem;background:none;}
+  #bc-boot[data-state="error"] .boot-retry{display:block;}
+</style>
+
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/responsive.css">
+<!-- 页面视觉样式：Step 4.1 逐个补充 -->
+<link rel="stylesheet" href="css/pages/page01.css">
+<link rel="stylesheet" href="css/pages/page02.css">
+<link rel="stylesheet" href="css/pages/page03.css">
+<!-- 图鉴卡共享视觉层（P04/P05/P06 共用），必须先于 page04-06.css -->
+<link rel="stylesheet" href="css/pages/specimen.css">
+<link rel="stylesheet" href="css/pages/page04.css">
+<link rel="stylesheet" href="css/pages/page05.css">
+<link rel="stylesheet" href="css/pages/page06.css">
+<link rel="stylesheet" href="css/pages/page07.css">
+<link rel="stylesheet" href="css/pages/page08.css">
+<link rel="stylesheet" href="css/pages/page09.css">
+<link rel="stylesheet" href="css/pages/page10.css">
+<link rel="stylesheet" href="css/pages/page11.css">
+<link rel="stylesheet" href="css/pages/page12.css">
+<link rel="stylesheet" href="css/pages/page13.css">
+</head>
+<body>
+
+<!-- P01 静态骨架（JS 未就绪 / 加载失败时可见，绝不白屏） -->
+<div id="bc-boot">
+  <div class="boot-title">本草有迹</div>
+  <div class="boot-seed"></div>
+  <div class="boot-sub">正在准备你的本草旅程…</div>
+  <button class="boot-retry" type="button" onclick="window.location.reload()">重新加载</button>
+</div>
+
+<noscript>
+  <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+              background:#0C0B09;color:#B9B2A5;font-size:.875rem;text-align:center;padding:0 2rem;z-index:600;">
+    本体验需要开启 JavaScript 才能运行，请在浏览器设置中开启后重试。
+  </div>
+</noscript>
+
+<div class="h5-root" id="h5-root" hidden>
+
+  <div class="bc-topbar" id="bc-topbar">
+    <button class="bc-back" id="bc-back" type="button" aria-label="返回" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F2EEE5" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 5 L8 12 L15 19"></path>
+      </svg>
+    </button>
+    <span class="bc-stage" id="bc-stage-label"></span>
+  </div>
+
+  <main id="bc-stage">
+    <section class="page" id="page-01" data-page="1" hidden></section>
+    <section class="page" id="page-02" data-page="2" hidden></section>
+    <section class="page" id="page-03" data-page="3" hidden></section>
+    <section class="page" id="page-04" data-page="4" hidden></section>
+    <section class="page" id="page-05" data-page="5" hidden></section>
+    <section class="page" id="page-06" data-page="6" hidden></section>
+    <section class="page" id="page-07" data-page="7" hidden></section>
+    <section class="page" id="page-08" data-page="8" hidden></section>
+    <section class="page" id="page-09" data-page="9" hidden></section>
+    <section class="page" id="page-10" data-page="10" hidden></section>
+    <section class="page" id="page-11" data-page="11" hidden></section>
+    <section class="page" id="page-12" data-page="12" hidden></section>
+    <section class="page" id="page-13" data-page="13" hidden></section>
+  </main>
+
+  <div class="bc-toast" id="bc-toast" hidden></div>
+  <div class="bc-mask" id="bc-mask" hidden></div>
+  <div class="bc-rotate-tip" id="bc-rotate-tip">请竖屏体验本草旅程</div>
+</div>
+
+<!-- 脚本引入顺序固定，不可调整 -->
+<script src="js/core/namespace.js"></script>
+<script src="js/core/config.js"></script>
+<script src="js/core/compat.js"></script>
+<script src="js/core/errors.js"></script>
+
+<script src="js/utils/num.js"></script>
+<script src="js/utils/dom.js"></script>
+<script src="js/utils/debounce.js"></script>
+<script src="js/utils/storage.js"></script>
+<script src="js/utils/asset.js"></script>
+<script src="js/utils/gesture.js"></script>
+
+<script src="data/herbs.js"></script>
+<script src="data/teas.js"></script>
+<script src="data/questions.js"></script>
+<script src="data/rules.js"></script>
+
+<script src="js/logic/scoring.js"></script>
+<script src="js/logic/profile.js"></script>
+<script src="js/logic/recommend.js"></script>
+<script src="js/logic/teamatch.js"></script>
+<script src="js/logic/archive.js"></script>
+
+<script src="js/render/placeholder.js"></script>
+<script src="js/render/specimen.js"></script>
+<script src="js/render/radar.js"></script>
+
+<script src="js/fx/anim.js"></script>
+
+<script src="js/core/store.js"></script>
+<script src="js/core/router.js"></script>
+
+<script src="js/pages/page01.js"></script>
+<script src="js/pages/page02.js"></script>
+<script src="js/pages/page03.js"></script>
+<script src="js/pages/page04.js"></script>
+<script src="js/pages/page05.js"></script>
+<script src="js/pages/page06.js"></script>
+<script src="js/pages/page07.js"></script>
+<script src="js/pages/page08.js"></script>
+<script src="js/pages/page09.js"></script>
+<script src="js/pages/page10.js"></script>
+<script src="js/pages/page11.js"></script>
+<script src="js/pages/page12.js"></script>
+<script src="js/pages/page13.js"></script>
+<script src="js/pages/index.js"></script>
+
+<script src="js/app.js"></script>
+
+<script>
+  // JS 加载失败守护：6s 未就绪则骨架切错误态（不白屏）
+  (function () {
+    setTimeout(function () {
+      try {
+        if (window.BC && window.BC.ready) return;
+        var b = document.getElementById('bc-boot');
+        if (b) b.setAttribute('data-state', 'error');
+      } catch (e) {}
+    }, 6000);
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+/* specimen.css —— 「数字本草图鉴卡」共享视觉层（P04 / P05 / P06 共用）
+ *
+ * 设计基调：数字植物标本馆 · 当代本草标本 · 东方自然 · 克制
+ * 明确禁止：卷轴 / 木纹 / 中式边框 / 祥云 / 复杂国风纹样 / 大红大金 / 3D / 传统药铺感
+ *
+ * 与 js/render/specimen.js 一一对应（同一渲染层的结构与样式）。
+ * 每页只覆盖 .sp 上的 CSS 变量，不改结构 —— 三页共用同一视觉系统。
+ *
+ * 约束：热区 ≥44 / 无 hover 依赖 / 可纵向滚动 / 禁止横向滚动 / 禁 CSS Grid gap
+ */
+
+.sp {
+  /* ── 每页可覆盖的克制变量 ── */
+  --sp-ring-a: .10;        /* 外环描边不透明度 */
+  --sp-ring-b: .07;        /* 内环描边不透明度 */
+  --sp-ring-b-dash: none;  /* 内环虚线（默认实线） */
+  --sp-axis-o: .05;        /* 十字定位线 */
+  --sp-tick-o: .22;        /* 定位刻度 */
+  --sp-dot-o: .40;         /* 坐标点 */
+  --sp-orbit-o: .20;       /* 轨道弧 */
+  --sp-halo-scale: 1;      /* 本草色光晕缩放 */
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.sp-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-bottom: 7rem;    /* 给固定底栏让位 */
+  overflow-x: hidden;
+}
+
+/* ── 药材位序（01 / 03）：标本编号感 ── */
+.sp-slot {
+  display: flex;
+  align-items: baseline;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: .6875rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+.sp-slot b {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  color: var(--c-text-1);
+}
+.sp-slot span { letter-spacing: .18em; }
+
+/* ── 名称 / 拉丁名 / 关键词标签 ── */
+.sp-name {
+  margin: .5rem 0 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1.25;
+  color: var(--c-text-1);
+}
+.sp-latin {
+  margin-top: .375rem;
+  font-size: .75rem;
+  font-style: italic;
+  letter-spacing: .1em;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.sp-kws {
+  margin-top: .875rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .375rem;
+}
+.sp-kws .tag { background: rgba(242, 238, 229, .03); }
+
+/* ── 主视觉：约页面高度 30%–38% ── */
+.sp-visual {
+  position: relative;
+  flex: 0 0 auto;
+  height: clamp(168px, 34vh, 330px);
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 本草色光晕（极淡，仅作呼吸感，不做发光特效） */
+.sp-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  -webkit-transform: scale(var(--sp-halo-scale));
+  transform: scale(var(--sp-halo-scale));
+}
+
+/* 标本台面：一条极淡水平基准线（数字标本馆的「摆放」暗示，非中式边框） */
+.sp-visual::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 5%;
+  height: 1px;
+  background: linear-gradient(to right,
+    rgba(242, 238, 229, 0),
+    rgba(242, 238, 229, .10) 24%,
+    rgba(242, 238, 229, .10) 76%,
+    rgba(242, 238, 229, 0));
+  pointer-events: none;
+}
+
+/* ── 标本测量层（极细线圆环 / 定位线 / 坐标点 / 轨道弧） ── */
+.sp-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.sp-rings .sp-r1,
+.sp-rings .sp-r2 { fill: none; }
+.sp-rings .sp-r1 {
+  stroke: var(--c-text-1);
+  stroke-opacity: var(--sp-ring-a);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.sp-rings .sp-r2 {
+  stroke: var(--c-text-1);
+  stroke-opacity: var(--sp-ring-b);
+  stroke-width: 1;
+  stroke-dasharray: var(--sp-ring-b-dash);
+  vector-effect: non-scaling-stroke;
+}
+.sp-rings .sp-axis {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: var(--sp-axis-o);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.sp-rings .sp-tick {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: var(--sp-tick-o);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.sp-rings .sp-dot {
+  fill: var(--c-accent);
+  fill-opacity: var(--sp-dot-o);
+}
+.sp-rings .sp-orbit {
+  fill: none;
+  stroke: var(--c-accent);
+  stroke-opacity: var(--sp-orbit-o);
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* 主图（正式插画 / 降级占位 SVG） */
+.sp-figure {
+  position: relative;
+  z-index: 1;
+  width: clamp(120px, 42%, 220px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sp-figure > svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+.sp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ── 叙事辅助文案（三页串联成一条连续叙事） ── */
+.sp-copy { margin-top: 1.25rem; }
+.sp-copy-t {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--c-text-1);
+}
+.sp-copy-d {
+  margin-top: .375rem;
+  font-size: .8125rem;
+  line-height: 1.75;
+  color: var(--c-text-3);
+}
+
+/* ── 信息区：标签行（避免大段文字墙） ── */
+.sp-rows {
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(242, 238, 229, .10);
+}
+.sp-row {
+  display: flex;
+  gap: .75rem;
+  padding: .625rem 0;
+  border-bottom: 1px solid rgba(242, 238, 229, .06);
+  font-size: .8125rem;
+  line-height: 1.7;
+}
+.sp-row-k {
+  flex: 0 0 3.25rem;
+  letter-spacing: .1em;
+  color: var(--c-text-3);
+}
+.sp-row-v {
+  flex: 1 1 auto;
+  color: var(--c-text-2);
+  word-break: break-word;
+}
+
+/* ── 标本记述（短段落，带细线小标） ── */
+.sp-desc { margin-top: 1.5rem; }
+.sp-label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .6875rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+.sp-label::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: rgba(242, 238, 229, .10);
+}
+.sp-desc-p {
+  margin: .625rem 0 0;
+  font-size: .875rem;
+  line-height: 1.9;
+  color: var(--c-text-2);
+}
+
+.sp-note {
+  margin-top: 1rem;
+  font-size: .6875rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+  text-align: center;
+}
+
+/* ── 底部主按钮：固定底栏（长内容滚动时始终可达，与顶栏同样居中 430） ── */
+.sp-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--c-bg) 58%, rgba(12, 11, 9, .86) 82%, rgba(12, 11, 9, 0));
+  z-index: 40;
+}
+.sp-cta { min-width: 11rem; }
+.sp-cta[disabled] { opacity: .42; pointer-events: none; }
+
+/* ── 安全降级视图（selectedHerbs 缺失 / 不足 3 味） ── */
+.sp-degraded .sp-visual { height: clamp(140px, 28vh, 260px); }
+.sp-degraded .sp-copy-d {
+  margin-top: 1.5rem;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  text-align: center;
+}
+
+/* ── 降级：低端机 / 减少动效 ── */
+html[data-lowperf="1"] .sp-rings .sp-orbit,
+html[data-reduced="1"] .sp-rings .sp-orbit { display: none; }
+html[data-lowperf="1"] .sp-halo { opacity: .72; }
+html[data-reduced="1"] .sp-img,
+html[data-lowperf="1"] .sp-img { -webkit-transition: none; transition: none; }
+
+/* ── 窄屏微调（320 / 极小屏） ── */
+@media screen and (max-width: 340px) {
+  .sp-name { font-size: 1.5rem; letter-spacing: .1em; }
+  .sp-visual { height: clamp(150px, 32vh, 260px); }
+  .sp-row-k { flex: 0 0 2.75rem; }
+  .sp-cta { min-width: 9.5rem; }
+  .sp-desc-p { font-size: .8125rem; line-height: 1.85; }
+}

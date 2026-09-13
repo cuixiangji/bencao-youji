@@ -1,0 +1,242 @@
+/* page03.css —— PAGE03 本草探索：12 选 3（重点页）
+   约束：热区 ≥44 / 无 hover 依赖 / 可纵向滚动 / 禁止横向滚动 */
+
+.p03 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── 头部：标题 + 计数 ── */
+.p03-head { flex: 0 0 auto; }
+.p03-title {
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--c-text-1);
+}
+.p03-meta {
+  margin-top: var(--sp-2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+.p03-tip {
+  font-size: .8125rem;
+  color: var(--c-text-3);
+}
+.p03-count {
+  font-size: .8125rem;
+  letter-spacing: .08em;
+  color: var(--c-text-2);
+  white-space: nowrap;
+}
+.p03-count b {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--c-text-1);
+}
+.p03-progress { margin-top: var(--sp-3); }
+.p03-progress > i { background: #E9E4D8; }
+
+/* ── 12 味本草卡片：flex 换行（禁用 grid-gap） ── */
+.p03-grid {
+  margin: var(--sp-5) -.375rem 0;
+  padding-bottom: 7rem;      /* 给固定底栏留位 */
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+.p03-card {
+  flex: 0 0 33.3333%;
+  padding: 0 .375rem .75rem;
+  box-sizing: border-box;
+}
+.p03-card-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .375rem;
+  width: 100%;
+  min-height: 6.75rem;      /* >44 热区 */
+  padding: .625rem .25rem .5rem;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius);
+  background: var(--c-bg-2);
+  color: var(--c-text-1);
+  text-align: center;
+  transition: -webkit-transform .18s ease, transform .18s ease,
+              border-color .18s ease, background-color .18s ease, opacity .18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.p03-card-btn:active { -webkit-transform: scale(.97); transform: scale(.97); }
+
+.p03-card-svg {
+  width: 100%;
+  max-width: 3.25rem;
+  height: auto;
+  transition: -webkit-transform .2s ease, transform .2s ease;
+}
+.p03-card-name {
+  font-size: .8125rem;
+  letter-spacing: .04em;
+  color: var(--c-text-1);
+  line-height: 1.3;
+}
+.p03-card-kw {
+  font-size: .6875rem;
+  color: var(--c-text-3);
+  line-height: 1.3;
+}
+
+/* 选中态：描边点亮 + 轻微放大 + 序号 */
+.p03-card.is-on .p03-card-btn {
+  border-color: rgba(233, 228, 216, .62);
+  background: #1B1713;
+  box-shadow: 0 0 0 1px rgba(233, 228, 216, .16), 0 6px 18px rgba(0, 0, 0, .45);
+}
+.p03-card.is-on .p03-card-svg {
+  -webkit-transform: scale(1.06);
+  transform: scale(1.06);
+}
+.p03-card-order {
+  position: absolute;
+  top: .375rem;
+  right: .375rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #E9E4D8;
+  color: #0C0B09;
+  font-size: .6875rem;
+  font-weight: 600;
+}
+.p03-card.is-on .p03-card-order { display: flex; }
+
+/* 满 3 后：未选卡置灰不可选（仍可点击已选卡取消） */
+.p03-card.is-locked .p03-card-btn { opacity: .38; }
+.p03-card.is-locked .p03-card-svg,
+.p03-card.is-locked .p03-card-name,
+.p03-card.is-locked .p03-card-kw { opacity: .8; }
+
+/* ── 信息浮层 ── */
+.p03-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, .72);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .26s ease, visibility .26s ease;
+}
+.p03-sheet.is-open { opacity: 1; visibility: visible; }
+.p03-sheet-inner {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: 86vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--sp-5) var(--sp-5) calc(var(--sp-5) + var(--sab));
+  background: var(--c-bg-2);
+  border-top: 1px solid var(--c-line);
+  border-radius: 1rem 1rem 0 0;
+  -webkit-transform: translateY(16px);
+  transform: translateY(16px);
+  transition: -webkit-transform .26s ease, transform .26s ease;
+}
+.p03-sheet.is-open .p03-sheet-inner {
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+.p03-sheet-close {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  width: var(--tap-min);
+  height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--c-text-2);
+  -webkit-tap-highlight-color: transparent;
+}
+.p03-sheet-close:active { -webkit-transform: scale(.92); transform: scale(.92); }
+
+.p03-sheet-top {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding-right: var(--sp-6);
+}
+.p03-sheet-svg { width: 4.5rem; height: 4.5rem; flex: 0 0 auto; }
+.p03-sheet-name { display: block; font-size: 1.25rem; font-weight: 500; color: var(--c-text-1); }
+.p03-sheet-latin {
+  display: block;
+  margin-top: .25rem;
+  font-size: .75rem;
+  font-style: italic;
+  letter-spacing: .04em;
+  color: var(--c-text-3);
+  word-break: break-word;
+}
+.p03-sheet-kws { margin-top: var(--sp-4); display: flex; flex-wrap: wrap; gap: .375rem; }
+.p03-sheet-rows { margin-top: var(--sp-4); }
+.p03-row {
+  display: flex;
+  gap: var(--sp-3);
+  padding: .5rem 0;
+  border-top: 1px solid rgba(242, 238, 229, .08);
+  font-size: .8125rem;
+  line-height: 1.6;
+}
+.p03-row-k { flex: 0 0 3.25rem; color: var(--c-text-3); }
+.p03-row-v { flex: 1 1 auto; color: var(--c-text-2); }
+.p03-sheet-desc {
+  margin-top: var(--sp-4);
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+}
+.p03-sheet-cta { margin-top: var(--sp-5); }
+.p03-sheet-cta .btn { width: 100%; }
+.p03-note {
+  margin-top: var(--sp-3);
+  font-size: .6875rem;
+  color: var(--c-text-3);
+  text-align: center;
+}
+
+/* ── 底部主按钮：固定底栏（长列表滚动时始终可见，与顶栏同样居中 430） ── */
+.p03-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--c-bg) 58%, rgba(12, 11, 9, .86) 82%, rgba(12, 11, 9, 0));
+  z-index: 40;
+}
+.p03-foot .btn { min-width: 11rem; }
+.p03-foot .btn[disabled] { opacity: .42; pointer-events: none; }
+
+/* 窄屏微调 */
+@media screen and (max-width: 340px) {
+  .p03-card { flex: 0 0 50%; }
+  .p03-card-btn { min-height: 6rem; }
+  .p03-card-svg { max-width: 2.75rem; }
+}

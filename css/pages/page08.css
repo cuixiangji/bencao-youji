@@ -1,0 +1,307 @@
+/* page08.css —— PAGE08 我的身体观察（BODY OBSERVATION · 田野记录 / 单题流水线）
+ *
+ * 定位：P07 收束记录 → P08 生活状态观察（5 题三选一，点击即进下一题）→ P09 本草身体画像
+ * 复用：base.css 变量、layout.css 的 .page / .page-foot 范式、components.css 的 .btn。
+ *       本草主题色仅经 --bo-accent 注入（由 JS 从 PALETTE / render.herbColor 取值），未新增颜色。
+ *
+ * 明确不出现：雷达图 / 结果图表 / 复杂数据可视化 / 传统中医诊断界面 / 医疗器械界面 / 强发光选中态。
+ * 明确不使用：卷轴 / 木纹 / 祥云 / 中式边框 / 中国红 / 大面积金色 / 3D / 拟物。
+ */
+
+.bo {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── 顶部：英文眉标 + 主标题 + 副标题 + 极淡装饰层 ── */
+.bo-head {
+  position: relative;
+  flex: 0 0 auto;
+  padding: .25rem 0 .875rem;
+}
+.bo-trace {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.bo-ring {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .08;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.bo-ring-2 { stroke-opacity: .05; }
+.bo-arc {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .10;
+  stroke-width: 1;
+  stroke-dasharray: 1 5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.bo-tick {
+  fill: none;
+  stroke: var(--c-text-1);
+  stroke-opacity: .14;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.bo-node { fill: var(--c-text-1); fill-opacity: .22; }
+
+.bo-eyebrow {
+  position: relative;
+  font-size: .6875rem;
+  letter-spacing: .24em;
+  color: var(--c-text-3);
+}
+.bo-title {
+  position: relative;
+  margin: .5rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  line-height: 1.25;
+  color: var(--c-text-1);
+}
+.bo-sub {
+  position: relative;
+  margin: .375rem 0 0;
+  font-size: .8125rem;
+  line-height: 1.7;
+  color: var(--c-text-3);
+}
+
+/* ── 进度：01 / 05 + 细进度线 ── */
+.bo-progress {
+  flex: 0 0 auto;
+  padding-bottom: .25rem;
+}
+.bo-step {
+  font-size: .6875rem;
+  letter-spacing: .2em;
+  color: var(--c-text-2);
+}
+.bo-bar {
+  width: 100%;
+  height: 2px;
+  margin-top: .5rem;
+  border-radius: 2px;
+  background: rgba(242, 238, 229, .10);
+  overflow: hidden;
+}
+.bo-bar > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: var(--bo-accent, var(--c-text-2));
+  opacity: .8;
+  transition: width .32s ease;
+}
+
+/* ── 中部：单题流水线（切题动画作用层） ── */
+.bo-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 1.125rem;
+}
+.bo-q { display: block; }
+.bo-q-title {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  line-height: 1.55;
+  color: var(--c-text-1);
+}
+
+/* 三个纵向大选项：整行可点、≥56px 高、不依赖 hover */
+.bo-options {
+  display: flex;
+  flex-direction: column;
+  gap: .625rem;
+}
+.bo-opt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+  min-height: 56px;               /* 热区：整行，保证 ≥44×44 且留足够触控余量 */
+  padding: .875rem 1rem;
+  border: 1px solid var(--c-line);
+  border-radius: .625rem;
+  background: rgba(21, 18, 15, .55);
+  text-align: left;
+  overflow: hidden;
+  transition: border-color .18s ease, -webkit-transform .14s ease, transform .14s ease;
+}
+.bo-opt:active { -webkit-transform: scale(.985); transform: scale(.985); }
+
+/* 极淡本草色底（用整层 opacity 控制，避免旧内核不支持 8 位 hex / color-mix） */
+.bo-opt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--bo-accent, #8A9A7B);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s ease;
+}
+.bo-opt.is-on::after { opacity: .07; }
+
+.bo-opt-key {
+  position: relative;
+  flex: 0 0 1.125rem;
+  font-size: .75rem;
+  letter-spacing: .16em;
+  color: var(--c-text-3);
+  transition: color .18s ease;
+}
+.bo-opt-text {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: .9375rem;
+  line-height: 1.5;
+  color: var(--c-text-2);
+  word-break: break-word;
+}
+.bo-opt-dot {
+  position: relative;
+  flex: 0 0 auto;
+  width: .5rem;
+  height: .5rem;
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+
+/* 选中态：轻微边框 + 极淡底 + 细点 → 不使用强发光 */
+.bo-opt.is-on {
+  border-color: var(--bo-accent, var(--c-text-2));
+}
+.bo-opt.is-on .bo-opt-key { color: var(--bo-accent, var(--c-text-2)); }
+.bo-opt.is-on .bo-opt-text { color: var(--c-text-1); }
+.bo-opt.is-on .bo-opt-dot {
+  background: var(--bo-accent, var(--c-text-2));
+  border-color: var(--bo-accent, var(--c-text-2));
+}
+
+/* ── 完成过渡态：观察记录完成（约 800ms 后进入 P09） ── */
+.bo-done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 11rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+.bo-done-ring {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--bo-accent, var(--c-text-2));
+  border-radius: 50%;
+  opacity: .55;
+}
+.bo-done-t {
+  font-size: 1.125rem;
+  letter-spacing: .14em;
+  color: var(--c-text-1);
+}
+.bo-done-en {
+  margin-top: .5rem;
+  font-size: .6875rem;
+  letter-spacing: .22em;
+  color: var(--c-text-3);
+}
+
+/* ── 底部：极轻提示 + 统一免责小字 ── */
+.bo-hint {
+  flex: 0 0 auto;
+  margin-top: 1.25rem;
+  font-size: .75rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  text-align: center;
+}
+.bo-note {
+  flex: 0 0 auto;
+  margin: .625rem 0 0;
+  font-size: .6875rem;
+  line-height: 1.6;
+  color: var(--c-text-3);
+  opacity: .72;
+  text-align: center;
+}
+
+/* ── 数据异常降级（不白屏） ── */
+.bo-degraded .bo-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 7rem;
+}
+.bo-empty {
+  width: 6.5rem;
+  height: 6.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bo-empty > svg { width: 100%; height: auto; }
+.bo-empty-msg {
+  margin: 1.25rem 0 0;
+  font-size: .875rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  text-align: center;
+}
+.bo-foot {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-5) calc(var(--sp-4) + var(--sab));
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background: linear-gradient(to top, var(--c-bg) 58%, rgba(12, 11, 9, .86) 82%, rgba(12, 11, 9, 0));
+  z-index: 40;
+}
+.bo-cta { min-width: 11rem; }
+
+/* ── 降级：低端机 / 减少动效 ── */
+html[data-lowperf="1"] .bo-arc,
+html[data-reduced="1"] .bo-arc,
+html.bc-skip-anim .bo-arc { display: none; }
+html[data-lowperf="1"] .bo-bar > i { transition: none; }
+
+/* ── 窄屏微调（320 / 极小屏） ── */
+@media screen and (max-width: 340px) {
+  .bo-title { font-size: 1.375rem; }
+  .bo-q-title { font-size: 1.0625rem; margin-bottom: .875rem; }
+  .bo-stage { margin-top: .875rem; }
+  .bo-opt { padding: .75rem .875rem; gap: .625rem; }
+  .bo-opt-text { font-size: .875rem; }
+  .bo-options { gap: .5rem; }
+  .bo-cta { min-width: 9.5rem; }
+}
+
+/* ── 宽屏：略宽留白（430 上限由 .h5-root 控制） ── */
+@media screen and (min-width: 400px) {
+  .bo-q-title { font-size: 1.1875rem; }
+}

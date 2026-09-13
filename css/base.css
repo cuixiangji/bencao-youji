@@ -1,0 +1,84 @@
+/* base.css —— 变量 / 字体栈 / rem / safe-area / 黑底 */
+
+:root {
+  /* 配色（冻结：近黑底 + 低饱和本草色） */
+  --c-bg:        #0C0B09;
+  --c-bg-2:      #15120F;
+  --c-text-1:    #F2EEE5;   /* 一级标题 */
+  --c-text-2:    #B9B2A5;   /* 二级文字 */
+  --c-text-3:    #81796C;   /* 说明文字 */
+  --c-line:      rgba(242, 238, 229, .16);
+  --c-accent:    #E9E4D8;
+
+  /* 中文字体栈：系统字体优先 + sans-serif 终极兜底，保证永不缺字 */
+  --font-base: system-ui, -apple-system,
+    "PingFang SC",
+    "HarmonyOS Sans SC",
+    "MiSans",
+    "Source Han Sans CN",
+    "Noto Sans CJK SC",
+    "Microsoft YaHei",
+    "Hiragino Sans GB",
+    "WenQuanYi Micro Hei",
+    sans-serif;
+
+  /* 安全区（不支持 env() 时退化为固定值） */
+  --sat: 0px;
+  --sab: 0px;
+
+  /* 尺寸节奏（rem，随根字号流体缩放） */
+  --sp-1: .25rem;
+  --sp-2: .5rem;
+  --sp-3: .75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+
+  --radius: .75rem;
+  --tap-min: 44px;   /* 最小点击区（不随 rem 缩，保证物理尺寸） */
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  :root { --sat: env(safe-area-inset-top); --sab: env(safe-area-inset-bottom); }
+}
+
+html {
+  /* 375px → 16px；320px → 13.65px；430px → 18.3px（上限封顶） */
+  font-size: clamp(14px, 4.267vw, 18px);
+  background: var(--c-bg);
+}
+
+body {
+  font-family: var(--font-base);
+  background: var(--c-bg);
+  color: var(--c-text-1);
+  line-height: 1.6;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;         /* 支持者覆盖 */
+  overflow-x: hidden;         /* 禁止横向滚动 */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 文本层级 */
+.t1 { font-size: 1.5rem; color: var(--c-text-1); font-weight: 500; line-height: 1.35; }
+.t2 { font-size: 1.125rem; color: var(--c-text-1); font-weight: 500; }
+.t3 { font-size: 1rem; color: var(--c-text-2); }
+.t4 { font-size: .875rem; color: var(--c-text-3); }
+.en { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: .08em; }
+
+/* 图片/资源占位块（加载失败兜底） */
+.bc-ph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius);
+  color: var(--c-text-2);
+  font-size: 1.25rem;
+}
+@supports not (aspect-ratio: 1 / 1) {
+  .bc-ph::before { content: ""; display: block; padding-top: 100%; }
+}
