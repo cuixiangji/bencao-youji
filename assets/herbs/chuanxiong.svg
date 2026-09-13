@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" stroke="#9CB19C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse cx="120" cy="178" rx="28" ry="12"/>
+  <path d="M120 166 L120 110" stroke-width="3"/>
+  <line x1="92" y1="178" x2="80" y2="188"/>
+  <line x1="148" y1="178" x2="160" y2="188"/>
+  <line x1="108" y1="186" x2="100" y2="196"/>
+  <line x1="132" y1="186" x2="140" y2="196"/>
+  <line x1="80" y1="94" x2="160" y2="94"/>
+  <line x1="85" y1="78" x2="155" y2="78"/>
+  <line x1="95" y1="62" x2="145" y2="62"/>
+  <line x1="110" y1="50" x2="130" y2="50"/>
+  <line x1="120" y1="94" x2="120" y2="110"/>
+  <line x1="90" y1="78" x2="110" y2="94"/>
+  <line x1="150" y1="78" x2="130" y2="94"/>
+  <line x1="100" y1="62" x2="120" y2="78"/>
+  <line x1="140" y1="62" x2="120" y2="78"/>
+  <line x1="115" y1="50" x2="120" y2="62"/>
+  <line x1="125" y1="50" x2="120" y2="62"/>
+</svg>

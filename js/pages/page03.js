@@ -60,7 +60,14 @@
     currentId = id;
 
     var color = BC.render.herbColor(h.id);
-    if (sheetSvg) sheetSvg.innerHTML = BC.render.placeholderSVG(color, h.name, 96);
+    /* 植物插画：浮层同样复用 specimen.mountFigure（与卡片一致，Step 7） */
+    if (sheetSvg) {
+      if (BC.render.specimen && BC.render.specimen.mountFigure) {
+        BC.render.specimen.mountFigure(sheetSvg, h, 96);
+      } else {
+        sheetSvg.innerHTML = BC.render.placeholderSVG(color, h.name, 96);
+      }
+    }
     if (sheetName) sheetName.textContent = h.name;
     if (sheetLatin) sheetLatin.textContent = h.latin || '';
     if (sheetDesc) sheetDesc.textContent = h.description || '';
@@ -191,9 +198,16 @@
           var color = BC.render.herbColor(h.id);
           btn.innerHTML =
             '<span class="p03-card-order"></span>' +
-            '<span class="p03-card-svg">' + BC.render.placeholderSVG(color, h.name, 96) + '</span>' +
+            '<span class="p03-card-svg"></span>' +
             '<span class="p03-card-name"></span>' +
             '<span class="p03-card-kw"></span>';
+          /* 植物插画：复用 specimen.mountFigure（webp→svg→几何占位 三级降级链，Step 7 视觉补强） */
+          var svgBox = btn.querySelector('.p03-card-svg');
+          if (svgBox && BC.render.specimen && BC.render.specimen.mountFigure) {
+            BC.render.specimen.mountFigure(svgBox, h, 96);
+          } else if (svgBox) {
+            svgBox.innerHTML = BC.render.placeholderSVG(color, h.name, 96);
+          }
           var nm = btn.querySelector('.p03-card-name');
           var kw = btn.querySelector('.p03-card-kw');
           if (nm) nm.textContent = h.name;

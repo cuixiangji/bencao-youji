@@ -15,7 +15,7 @@
   BC.data.herbs = [
     {
       id: 'chuanbeimu', name: '川贝母', latin: 'Fritillaria cirrhosa',
-      category: '根茎类药材', image: '01-chuanbeimu', image_style: 'flat-botanical',
+      category: '根茎类药材', image: 'chuanbeimu', image_style: 'flat-botanical',
       color: '#E9E4D8',
       property: '微寒', taste: '甘、苦',
       origin: '四川、青海、西藏等高海拔地区',
@@ -28,7 +28,7 @@
     },
     {
       id: 'chuanxiong', name: '川芎', latin: 'Ligusticum chuanxiong',
-      category: '', image: '02-chuanxiong', image_style: 'flat-botanical',
+      category: '', image: 'chuanxiong', image_style: 'flat-botanical',
       color: '青褐',
       property: '温', taste: '辛',
       origin: '四川都江堰、彭州等地',
@@ -41,7 +41,7 @@
     },
     {
       id: 'huanglian', name: '黄连', latin: 'Coptis chinensis',
-      category: '', image: '03-huanglian', image_style: 'flat-botanical',
+      category: '', image: 'huanglian', image_style: 'flat-botanical',
       color: '苦黄',
       property: '寒', taste: '苦',
       origin: '四川、湖北等地区',
@@ -54,7 +54,7 @@
     },
     {
       id: 'lianzi', name: '莲子', latin: 'Nelumbo nucifera seed',
-      category: '', image: '04-lianzi', image_style: 'flat-botanical',
+      category: '', image: 'lianzi', image_style: 'flat-botanical',
       color: '莲青',
       property: '平', taste: '甘、涩',
       origin: '湖南、江西、福建',
@@ -67,7 +67,7 @@
     },
     {
       id: 'chenpi', name: '陈皮', latin: 'Citrus reticulata peel',
-      category: '', image: '05-chenpi', image_style: 'flat-botanical',
+      category: '', image: 'chenpi', image_style: 'flat-botanical',
       color: '暖橙',
       property: '温', taste: '辛、苦',
       origin: '广东新会',
@@ -80,7 +80,7 @@
     },
     {
       id: 'jinyinhua', name: '金银花', latin: 'Lonicera japonica',
-      category: '', image: '06-jinyinhua', image_style: 'flat-botanical',
+      category: '', image: 'jinyinhua', image_style: 'flat-botanical',
       color: '淡黄绿',
       property: '寒', taste: '甘',
       origin: '山东、河南等地',
@@ -93,7 +93,7 @@
     },
     {
       id: 'juhua', name: '菊花', latin: 'Chrysanthemum morifolium',
-      category: '', image: '07-juhua', image_style: 'flat-botanical',
+      category: '', image: 'juhua', image_style: 'flat-botanical',
       color: '淡黄',
       property: '微寒', taste: '甘、苦',
       origin: '浙江、安徽',
@@ -106,7 +106,7 @@
     },
     {
       id: 'gouqizi', name: '枸杞子', latin: 'Lycium barbarum',
-      category: '', image: '08-gouqizi', image_style: 'flat-botanical',
+      category: '', image: 'gouqizi', image_style: 'flat-botanical',
       color: '枸杞红',
       property: '平', taste: '甘',
       origin: '宁夏',
@@ -119,7 +119,7 @@
     },
     {
       id: 'fuling', name: '茯苓', latin: 'Poria cocos',
-      category: '', image: '09-fuling', image_style: 'flat-botanical',
+      category: '', image: 'fuling', image_style: 'flat-botanical',
       color: '云白',
       property: '平', taste: '甘、淡',
       origin: '云南、安徽',
@@ -132,7 +132,7 @@
     },
     {
       id: 'gancao', name: '甘草', latin: 'Glycyrrhiza uralensis',
-      category: '', image: '10-gancao', image_style: 'flat-botanical',
+      category: '', image: 'gancao', image_style: 'flat-botanical',
       color: '浅棕',
       property: '平', taste: '甘',
       origin: '内蒙古、甘肃',
@@ -145,7 +145,7 @@
     },
     {
       id: 'shanzha', name: '山楂', latin: 'Crataegus pinnatifida',
-      category: '', image: '11-shanzha', image_style: 'flat-botanical',
+      category: '', image: 'shanzha', image_style: 'flat-botanical',
       color: '山楂红',
       property: '微温', taste: '酸、甘',
       origin: '山东、河北',
@@ -158,7 +158,7 @@
     },
     {
       id: 'bohe', name: '薄荷', latin: 'Mentha haplocalyx',
-      category: '', image: '12-bohe', image_style: 'flat-botanical',
+      category: '', image: 'bohe', image_style: 'flat-botanical',
       color: '薄荷绿',
       property: '凉', taste: '辛',
       origin: '江苏、安徽',

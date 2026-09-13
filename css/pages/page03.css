@@ -75,10 +75,25 @@
 .p03-card-btn:active { -webkit-transform: scale(.97); transform: scale(.97); }
 
 .p03-card-svg {
-  width: 100%;
-  max-width: 3.25rem;
-  height: auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: -webkit-transform .2s ease, transform .2s ease;
+}
+.p03-card-svg .sp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.p03-card-svg > svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
 }
 .p03-card-name {
   font-size: .8125rem;
@@ -180,6 +195,15 @@
   padding-right: var(--sp-6);
 }
 .p03-sheet-svg { width: 4.5rem; height: 4.5rem; flex: 0 0 auto; }
+.p03-sheet-svg .sp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.p03-sheet-svg > svg { width: 100%; height: auto; max-height: 100%; }
 .p03-sheet-name { display: block; font-size: 1.25rem; font-weight: 500; color: var(--c-text-1); }
 .p03-sheet-latin {
   display: block;
@@ -238,5 +262,5 @@
 @media screen and (max-width: 340px) {
   .p03-card { flex: 0 0 50%; }
   .p03-card-btn { min-height: 6rem; }
-  .p03-card-svg { max-width: 2.75rem; }
+  .p03-card-svg { width: 3rem; height: 3rem; }
 }
