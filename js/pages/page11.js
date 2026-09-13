@@ -109,18 +109,6 @@
     return (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255;
   }
 
-  /**
-   * 标本墨色的靠拢系数 k（纯展示用途，不改数据色板）：
-   * PALETTE 里川贝母 #E9E4D8 / 茯苓 #E3E0D5 近白，若按同一系数描边会在米白卡面上糊掉，
-   * 故越浅的本草色越向暖深褐 #5B4638 靠拢，保证轮廓始终可读（仍是低饱和植物色）。
-   */
-  function inkK(base) {
-    var L = lumOf(base);
-    if (L > 0.82) return 0.72;
-    if (L > 0.70) return 0.56;
-    return 0.42;
-  }
-
   function skipFx() {
     try { if (BC.compat && BC.compat.lowPerf) return true; } catch (e) { /* ignore */ }
     return BC.fx.shouldSkip();
@@ -135,127 +123,7 @@
     gancao: 'LICORICE ROOT', shanzha: 'HAWTHORN', bohe: 'MINT LEAF'
   };
 
-  /* 形态原型（页面内展示用；决定占位插画的轮廓差异，不改数据） */
-  var FORM = {
-    chuanbeimu: 'bulb', chuanxiong: 'rhizome', huanglian: 'rootlet',
-    lianzi: 'seed', chenpi: 'peel', jinyinhua: 'bud',
-    juhua: 'flower', gouqizi: 'berry', fuling: 'sclerotium',
-    gancao: 'root', shanzha: 'fruit', bohe: 'leaf'
-  };
-
   function enOf(herbId) { return EN_LABEL[herbId] || String(herbId || '').toUpperCase(); }
-  function formOf(herbId) { return FORM[herbId] || 'leaf'; }
-
-  /* ── 差异化本草轮廓（页面内 inline SVG，每味按形态原型区分） ────────────
-     轮廓差异：根茎 / 鳞茎 / 果实 / 种子 / 花 / 花蕾 / 浆果 / 菌核 / 根 /
-               果皮 / 叶 / 簇根 —— 12 味各不相同。
-     颜色：fill = 标本墨色 30% 淡染，stroke = 标本墨色 80% 轮廓（低饱和）。 */
-  function figureSVG(herb) {
-    var base = BC.render.herbColor(herb && herb.id);
-    var k = inkK(base);
-    var ink = deepen(base, k);
-    var f = SP.hexA(deepen(base, Math.max(0.14, k - 0.24)), '.30');
-    var s = ink;
-    var w = '1.2';
-    var form = formOf(herb && herb.id);
-    var d = '';
-
-    if (form === 'bulb') {
-      /* 川贝母：两枚抱合鳞瓣（松贝「怀中抱月」）+ 基部须根 */
-      d = '<path d="M50 90 C35 90 23 77 23 58 C23 39 33 23 44 11 C42 34 46 57 50 75 Z" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<path d="M50 90 C65 90 77 77 77 58 C77 39 67 23 56 11 C58 34 54 57 50 75 Z" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<path d="M50 75 V90" stroke="' + s + '" stroke-width=".9" fill="none" opacity=".6"/>' +
-        '<path d="M32 34 C36 45 39 55 43 64" stroke="' + s + '" stroke-width=".7" fill="none" opacity=".45"/>' +
-        '<path d="M68 34 C64 45 61 55 57 64" stroke="' + s + '" stroke-width=".7" fill="none" opacity=".45"/>' +
-        '<path d="M50 90 C47 94 43 96 39 97 M50 90 C53 94 57 96 61 97" stroke="' + s + '" stroke-width=".9" fill="none" opacity=".55"/>';
-    } else if (form === 'peel') {
-      /* 陈皮：卷曲果皮 + 香气弧线 */
-      d = '<path d="M23 34 C35 15 68 13 79 30 C88 45 80 61 66 64 C72 51 65 38 54 34 C42 29 31 37 29 50 C27 62 34 74 45 78 C29 80 18 67 19 52 C19 44 21 38 23 34 Z" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<path d="M62 20 C71 23 77 30 79 38" stroke="' + s + '" stroke-width=".8" fill="none" opacity=".55"/>' +
-        '<path d="M50 70 C54 66 60 65 65 67" stroke="' + s + '" stroke-width=".8" fill="none" opacity=".45"/>' +
-        '<path d="M40 82 C44 79 49 79 53 81" stroke="' + s + '" stroke-width=".8" fill="none" opacity=".4"/>';
-    } else if (form === 'seed') {
-      /* 莲子：椭圆种子 + 顶部小芽 + 内部种脐 */
-      d = '<ellipse cx="50" cy="58" rx="23" ry="28" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<path d="M50 30 C50 22 45 16 38 13" stroke="' + s + '" stroke-width="1.1" fill="none"/>' +
-        '<path d="M38 13 C44 10 49 14 50 20" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<ellipse cx="50" cy="58" rx="11" ry="14" fill="none" stroke="' + s + '" stroke-width=".7" opacity=".45"/>' +
-        '<path d="M50 44 C46 49 46 56 50 62 C54 56 54 49 50 44 Z" fill="none" stroke="' + s + '" stroke-width=".8" opacity=".5"/>';
-    } else if (form === 'flower') {
-      /* 菊花：放射花瓣 rosette + 花心 */
-      var petals = '';
-      for (var i = 0; i < 12; i++) {
-        petals += '<ellipse cx="50" cy="24" rx="6" ry="15" fill="' + f + '" stroke="' + s +
-          '" stroke-width=".7" transform="rotate(' + (i * 30) + ' 50 50)"/>';
-      }
-      d = petals +
-        '<circle cx="50" cy="50" r="10" fill="' + f + '" stroke="' + s + '" stroke-width="1"/>' +
-        '<circle cx="50" cy="50" r="4" fill="' + s + '" opacity=".4"/>';
-    } else if (form === 'bud') {
-      /* 金银花：细长花蕾 + 双瓣 + 茎 + 叶 */
-      d = '<path d="M50 80 C50 58 50 40 50 24" stroke="' + s + '" stroke-width="1.4" fill="none"/>' +
-        '<path d="M50 32 C42 27 35 31 33 39 C42 42 48 39 50 32 Z" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<path d="M50 32 C58 27 65 31 67 39 C58 42 52 39 50 32 Z" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<path d="M50 24 C47 17 50 11 57 9" stroke="' + s + '" stroke-width="1" fill="none"/>' +
-        '<path d="M50 64 C41 57 32 59 28 66 C37 72 46 70 50 64 Z" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>';
-    } else if (form === 'berry') {
-      /* 枸杞子：浆果cluster + 短梗 */
-      d = '<path d="M50 84 C50 66 50 52 50 38" stroke="' + s + '" stroke-width="1.3" fill="none"/>' +
-        '<ellipse cx="39" cy="62" rx="9" ry="13" fill="' + f + '" stroke="' + s + '" stroke-width=".9" transform="rotate(-18 39 62)"/>' +
-        '<ellipse cx="61" cy="59" rx="8" ry="12" fill="' + f + '" stroke="' + s + '" stroke-width=".9" transform="rotate(16 61 59)"/>' +
-        '<ellipse cx="50" cy="39" rx="7" ry="10" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<path d="M50 29 C44 25 40 27 38 32" stroke="' + s + '" stroke-width=".9" fill="none"/>';
-    } else if (form === 'leaf') {
-      /* 薄荷：茎 + 两对锯齿叶 */
-      var leafL = 'M50 40 C34 40 21 32 17 19 C34 17 48 26 50 40 Z';
-      var leafR = 'M50 56 C66 56 79 48 83 35 C66 33 52 42 50 56 Z';
-      d = '<path d="M50 90 C50 66 50 44 50 20" stroke="' + s + '" stroke-width="1.2" fill="none"/>' +
-        '<path d="' + leafL + '" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<path d="' + leafR + '" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<path d="M50 70 C38 70 28 64 24 54 C38 52 49 59 50 70 Z" fill="' + f + '" stroke="' + s + '" stroke-width=".9" opacity=".8"/>' +
-        '<path d="M50 40 H32 M50 56 H70" stroke="' + s + '" stroke-width=".6" opacity=".5"/>';
-    } else if (form === 'sclerotium') {
-      /* 茯苓：不规则菌核（云朵状）+ 细小斑点 */
-      d = '<path d="M27 45 C29 30 44 23 57 28 C71 33 79 46 74 60 C70 73 57 81 45 78 C31 75 23 62 27 45 Z" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<path d="M35 50 C40 45 47 45 51 50" stroke="' + s + '" stroke-width=".7" fill="none" opacity=".5"/>' +
-        '<circle cx="61" cy="57" r="1.7" fill="' + s + '" opacity=".45"/>' +
-        '<circle cx="44" cy="64" r="1.3" fill="' + s + '" opacity=".4"/>' +
-        '<circle cx="53" cy="38" r="1.2" fill="' + s + '" opacity=".38"/>';
-    } else if (form === 'root') {
-      /* 甘草：波浪状根条束 */
-      d = '<path d="M29 16 C40 33 29 50 41 66 C50 79 43 87 39 92" stroke="' + s + '" stroke-width="2.6" fill="none" opacity=".55"/>' +
-        '<path d="M51 12 C62 31 49 48 60 64 C67 75 63 85 58 92" stroke="' + s + '" stroke-width="3" fill="none" opacity=".45"/>' +
-        '<path d="M70 22 C77 39 68 54 75 71" stroke="' + s + '" stroke-width="2.2" fill="none" opacity=".35"/>' +
-        '<path d="M36 36 H44 M45 56 H53 M63 44 H71" stroke="' + s + '" stroke-width=".7" opacity=".4"/>';
-    } else if (form === 'fruit') {
-      /* 山楂：圆形果实 + 顶部萼 + 一叶 */
-      d = '<circle cx="50" cy="59" r="24" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<path d="M50 35 V24" stroke="' + s + '" stroke-width="1.2" fill="none"/>' +
-        '<path d="M43 31 C49 26 55 26 60 31" stroke="' + s + '" stroke-width="1" fill="none"/>' +
-        '<path d="M50 30 C60 21 73 21 79 27 C71 36 58 36 50 30 Z" fill="' + f + '" stroke="' + s + '" stroke-width=".9"/>' +
-        '<circle cx="42" cy="52" r="2" fill="' + s + '" opacity=".32"/>' +
-        '<circle cx="58" cy="66" r="1.6" fill="' + s + '" opacity=".28"/>';
-    } else if (form === 'rhizome') {
-      /* 川芎：不规则块状根茎 + 环节 */
-      d = '<path d="M25 41 C34 30 48 30 56 38 C64 30 77 33 79 43 C85 53 76 63 66 65 C62 76 49 79 41 72 C31 79 19 70 21 58 C17 50 19 45 25 41 Z" fill="' + f + '" stroke="' + s + '" stroke-width="' + w + '"/>' +
-        '<circle cx="40" cy="49" r="2.4" fill="none" stroke="' + s + '" stroke-width=".8" opacity=".6"/>' +
-        '<circle cx="60" cy="52" r="2" fill="none" stroke="' + s + '" stroke-width=".8" opacity=".55"/>' +
-        '<path d="M33 62 C38 58 44 58 48 62" stroke="' + s + '" stroke-width=".7" fill="none" opacity=".5"/>' +
-        '<path d="M54 68 C59 65 64 65 68 68" stroke="' + s + '" stroke-width=".7" fill="none" opacity=".45"/>';
-    } else {
-      /* 黄连带 rootlet：簇生细根 */
-      d = '<path d="M50 22 C50 40 46 60 40 84" stroke="' + s + '" stroke-width="2.4" fill="none" opacity=".6"/>' +
-        '<path d="M50 22 C52 42 54 62 58 84" stroke="' + s + '" stroke-width="1.8" fill="none" opacity=".5"/>' +
-        '<path d="M50 26 C42 34 34 52 30 76" stroke="' + s + '" stroke-width="1.6" fill="none" opacity=".45"/>' +
-        '<path d="M50 26 C60 34 68 52 72 76" stroke="' + s + '" stroke-width="1.6" fill="none" opacity=".45"/>' +
-        '<path d="M50 20 C50 16 50 14 50 11" stroke="' + s + '" stroke-width="1.6" fill="none" opacity=".7"/>' +
-        '<path d="M38 60 H44 M56 54 H62 M46 74 H52" stroke="' + s + '" stroke-width=".7" opacity=".4"/>';
-    }
-
-    return '<svg class="tp-fig-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" ' +
-      'aria-hidden="true" focusable="false">' + d + '</svg>';
-  }
-
   /* ── 茶盏（透明轮廓 + 1px 细描边 + 底部基准线） ── */
   function vesselSVG(color) {
     var ink = deepen(color, 0.5);
@@ -368,19 +236,24 @@
     vessel.insertAdjacentHTML('beforeend', vesselSVG(color));
     visual.appendChild(vessel);
 
-    /* 一味在左上、一味在右下；两者与茶盏形成前后遮挡（figB 在 figA 之前） */
+    /* 一味在左上、一味在右下；两者与茶盏形成前后遮挡（figB 在 figA 之前）
+       本草图统一使用 assets/herbs/{image}.svg，保持与 P02/P03/P04-P07 同源 */
     var figA = U.el('div', 'tp-fig tp-fig-a');
     figA.setAttribute('data-herb', mats[0].id);
     figA.setAttribute('data-role', 'A');
-    figA.insertAdjacentHTML('beforeend', figureSVG(mats[0]));
+    var imgA = U.el('div', 'tp-fig-img');
+    figA.appendChild(imgA);
     figA.appendChild(U.el('span', 'tp-fig-halo'));
+    SP.mountFigure(imgA, mats[0], 100);
     visual.appendChild(figA);
 
     var figB = U.el('div', 'tp-fig tp-fig-b');
     figB.setAttribute('data-herb', mats[1].id);
     figB.setAttribute('data-role', 'B');
-    figB.insertAdjacentHTML('beforeend', figureSVG(mats[1]));
+    var imgB = U.el('div', 'tp-fig-img');
+    figB.appendChild(imgB);
     figB.appendChild(U.el('span', 'tp-fig-halo'));
+    SP.mountFigure(imgB, mats[1], 100);
     visual.appendChild(figB);
 
     /* 图文标注（细线连接到对应本草插画；本页 2 个，≤ ANNOT_MAX） */

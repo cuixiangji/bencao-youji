@@ -165,11 +165,8 @@
   align-items: center;
   justify-content: center;
 }
-.ar-img > svg {
-  width: 100%;
-  height: auto;
-  max-height: 100%;
-}
+.ar-img > svg { width: 100%; height: auto; max-height: 100%; }
+.ar-img > img { width: 100%; height: 100%; object-fit: contain; }
 
 /* 条目信息：name / latin / keywords[0] */
 .ar-info { flex: 1 1 auto; min-width: 0; }

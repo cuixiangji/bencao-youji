@@ -116,8 +116,16 @@
         var item = U.el('div', 'p02-item');
         item.setAttribute('data-herb', h.id);
         item.innerHTML =
-          '<div class="p02-item-svg">' + BC.render.placeholderSVG(color, h.name, 96) + '</div>' +
+          '<div class="p02-item-svg"></div>' +
           '<div class="p02-item-name"></div>';
+        var svgBox = item.querySelector('.p02-item-svg');
+        if (svgBox) {
+          if (BC.render.specimen && BC.render.specimen.mountFigure) {
+            BC.render.specimen.mountFigure(svgBox, h, 96);
+          } else {
+            svgBox.innerHTML = BC.render.placeholderSVG(color, h.name, 96);
+          }
+        }
         var nm = item.querySelector('.p02-item-name');
         if (nm) nm.textContent = h.name;
         field.appendChild(item);

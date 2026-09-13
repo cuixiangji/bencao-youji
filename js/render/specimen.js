@@ -53,7 +53,6 @@
     }
 
     var paths = BC.utils.asset.resolve(base);
-    var useSrc = (known === 'svg') ? paths.svg : paths.webp;
 
     var img = document.createElement('img');
     img.className = 'sp-img anim-fade';
@@ -61,20 +60,15 @@
     img.setAttribute('decoding', 'async');
 
     img.onerror = function () {
-      if (useSrc === paths.webp) {            // webp 缺失 → 试 svg
-        useSrc = paths.svg;
-        img.setAttribute('src', paths.svg);
-        return;
-      }
-      imgCache[base] = 'placeholder';         // 双源都缺失 → 几何占位（不破图）
+      imgCache[base] = 'placeholder';         // SVG 缺失 → 几何占位（不破图）
       box.innerHTML = BC.render.placeholderSVG(color, herb.name, sizePx);
     };
     img.onload = function () {
-      imgCache[base] = (useSrc === paths.svg) ? 'svg' : 'webp';
+      imgCache[base] = 'svg';
       img.className = 'sp-img is-ready';
     };
 
-    img.setAttribute('src', paths.webp);
+    img.setAttribute('src', paths.svg);       // 当前仅有 SVG 资产，直接读取
     box.innerHTML = '';
     box.appendChild(img);
   }
